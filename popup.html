@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Popup</title>
+    <link type="text/css" href="jquery-ui/css/smoothness/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
+    <link href="popup.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="jquery-ui/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="popup.js"></script>
+  </head>
+  <body id="main">
+    <div id="enabledCheckboxAndLabel" style="display:show">
+        <fieldset>
+         <legend>Select your privacy Level:</legend>
+          <input type="radio" name="choice" value="High">High<br>
+          <input type="radio" name="choice" value="Middle" checked>Middle(Recommended)<br>
+          <input type="radio" name="choice" value="Low">Low (Risky)<br>
+        </fieldset>
+        <input type="button" id="setLevel" name="submit" value="Submit">
+    </div>
+    <div>
+    	<p><label for="title">Title</label><br />
+    	<input type="text" id="title" name="title" size="50" value="" /></p>
+    	<p><label for="url">Url</label><br />
+    	<input type="text" id="url" name="url" size="50" value="" /></p>
+    	<p><label for="csrfToken">csrfToken</label><br />
+    	<input type="text" id="csrfToken" name="csrfToken" size="50" value="" /></p>
+    	<p><input id="save" type="submit" value="Save Bookmark" /></p>
+    </div>
+    
+  </body>
+</html>
