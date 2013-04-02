@@ -9,23 +9,16 @@ function checkForValidUrl(tabId, changeInfo, tab) {
     chrome.pageAction.show(tabId);
   }
 };
-
 // Listen for any changes to the URL of any tab.
 chrome.tabs.onUpdated.addListener(checkForValidUrl);
 
 var callbacks = [];
-
-function getPageInfo(callback) 
-{ 
-    // Add the callback to the queue
+function getPageInfo(callback) { 
     callbacks.push(callback); 
-
-    // Inject the content script into the current page 
     chrome.tabs.executeScript(null, { file: "contentscript.js" }); 
 }; 
 
-chrome.extension.onRequest.addListener(function(request) 
-{
+chrome.extension.onRequest.addListener(function(request) {
 	var callback = callbacks.shift();
 	callback(request); 
 });

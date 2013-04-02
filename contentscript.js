@@ -11,5 +11,6 @@ var pageInfo = {
 		"csrfToken": document.getElementById("nav-utility-auth").childNodes[0].href.split(/[=&]/)[3]
 };
 
+
 // Send the information back to the extension
 chrome.extension.sendRequest(pageInfo);

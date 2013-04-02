@@ -7,25 +7,36 @@
     <script type="text/javascript" src="jquery-ui/js/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="popup.js"></script>
   </head>
-  <body id="main">
-    <div id="enabledCheckboxAndLabel" style="display:show">
-        <fieldset>
-         <legend>Select your privacy Level:</legend>
-          <input type="radio" name="choice" value="High">High<br>
-          <input type="radio" name="choice" value="Middle" checked>Middle(Recommended)<br>
-          <input type="radio" name="choice" value="Low">Low (Risky)<br>
-        </fieldset>
-        <input type="button" id="setLevel" name="submit" value="Submit">
+  <body id="main">    
+    <div id="div-activity-broadcasts">
+      <fieldset>
+        <legend>Refresh your activity broadcasts:</legend>
+        <p>
+          <div id="insert-activity-broadcasts"></div>
+        </p>
+        <input type="button" id="btn-get-activity-broadcasts" name="get-activitysubmit" value="Collect Your Settings">
+        <input type="button" id="btn-set-activity-broadcasts" name="set-activitysubmit" value="Submit Your Settings">
+      </fieldset>
     </div>
-    <div>
-    	<p><label for="title">Title</label><br />
-    	<input type="text" id="title" name="title" size="50" value="" /></p>
-    	<p><label for="url">Url</label><br />
-    	<input type="text" id="url" name="url" size="50" value="" /></p>
-    	<p><label for="csrfToken">csrfToken</label><br />
-    	<input type="text" id="csrfToken" name="csrfToken" size="50" value="" /></p>
-    	<p><input id="save" type="submit" value="Save Bookmark" /></p>
+
+    <div id="div-set-global-level">
+      <fieldset>
+        <legend>Select your privacy Level:</legend>
+        <input type="radio" name="global-level" value="High">High<br>
+        <input type="radio" name="global-level" value="Middle" checked>Middle(Recommended)<br>
+        <input type="radio" name="global-level" value="Low">Low (Risky)<br>
+        <input type="button" id="btn-set-global-level" name="set-global-submit" value="Submit">
+      </fieldset>
     </div>
+
     
+    <div id="debug-form">
+      <fieldset>
+        <legend> Debugging information </legend>
+      	<p><label for="csrfToken">csrfToken</label><br />
+      	  <input type="text" id="csrfToken" name="csrfToken" size="50" value="" /></p>
+      	<p><input id="save" type="submit" value="Save Bookmark" /></p>
+      </fieldset>
+    </div>
   </body>
 </html>

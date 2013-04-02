@@ -1,7 +1,31 @@
-
-function toggleEnabled()
+function getGlobalSettings()
 {
-  var value = $('input[@name="choice"]:checked').val();
+	var xmlhttp = new XMLHttpRequest();
+	var url = "https://www.linkedin.com/settings/activity-broadcasts";
+	//var csrfToken = document.getElementById("nav-utility-auth").childNodes[0].href.split(/[=&]/)[3];
+	var csrfToken = document.getElementById("csrfToken").value;
+	var params = "csrfToken="+csrfToken;
+	xmlhttp.open("GET", url, true);
+	xmlhttp.withCredentials = true;
+	xmlhttp.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+	xmlhttp.send(params);
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4) {
+			var response = xmlhttp.responseText;
+			var xmlDoc = $(response);
+			var msgElem  = xmlDoc.find("#activity-activity-editActivityBroadcasts");
+			if (msgElem[0].checked === true) {
+				$("#insert-activity-broadcasts").html("<input type=\"checkbox\" name=\"activity-broadcasts\" value=\"activity\" checked> <label for=\"activity-broadcasts\">activity broadcasts</label> ");
+			} else {
+				$("#insert-activity-broadcasts").html("<input type=\"checkbox\" name=\"activity-broadcasts\" value=\"activity\" > <label for=\"activity-broadcasts\">activity broadcasts</label>");
+			}
+		}
+	};
+}
+
+function setGlobalSettings()
+{
+  var value = $('input[@name="global-level"]:checked').val();
 	var xmlhttp = new XMLHttpRequest();
 	//xmlhttp.open("GET", "https://www.linkedin.com/settings/activity-broadcasts?goback=%2Enas_*1_*1_*1", true);
 	var url = "https://www.linkedin.com/settings/activity-broadcasts-submit";
@@ -31,9 +55,9 @@ function onPageInfo(o) {
 } 
 
 function test() {
-  // Attach event listeners
 	console.log("11111111 found xxxxxxxxxx ");
-  $("#setLevel").click(toggleEnabled);
+	$("#btn-set-global-level").click(setGlobalSettings);
+	$("#btn-get-activity-broadcasts").click(getGlobalSettings);
   var bg = chrome.extension.getBackgroundPage();
   bg.getPageInfo(onPageInfo);
 }
