@@ -48,6 +48,8 @@ function getOptionSetting(url, findSettingID, setDivID, setInputID, setLabel) {
 }
 
 function getAllSettings() {
+	$("#div-error-messages").html("");
+	
 	var url = "https://www.linkedin.com/settings/activity-broadcasts";
 	var findID = "activity-activity-editActivityBroadcasts";
 	var setDivID = "div-activity-broadcasts";
@@ -70,15 +72,12 @@ function getAllSettings() {
 	getOptionSetting(url3, findID3, setDivID3, setSelectID3, setLabel3);
 }
 
-
-function setGlobalSettings()
-{
-  var value = $('input[@name="global-level"]:checked').val();
+function setRadioSetting(url, findSettingID, setVariableName, setValue) {
+  var checked = $('#'+ findSettingID)[0].checked;
 	var xmlhttp = new XMLHttpRequest();
-	var url = "https://www.linkedin.com/settings/activity-broadcasts-submit";
 	var csrfToken = document.getElementById("csrfToken").value;
-	var activity = (value == "High" ? "activity" : "");
-	var params = "activity="+activity+"&updateBroadcastSettings=Save%20changes&csrfToken="+csrfToken;
+	setValue = checked ? setValue : "";
+	var params = "" + setVariableName + "=" + setValue + "&csrfToken=" + csrfToken;
 	xmlhttp.open("POST", url, true);
 	xmlhttp.withCredentials = true;
 	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -89,21 +88,66 @@ function setGlobalSettings()
 			var response = xmlhttp.responseText;
 			var xmlDoc = $(response);
 			var msgElem  = xmlDoc.find("#global-error").find("strong")[0];
-			var msgText = $(msgElem).html();
-			document.body.innerHTML = msgText;
+			$("#div-error-messages").append(msgElem);
+			$("#div-error-messages").append(" for " + setVariableName + "<br />");
+			//return msgText;
 		}
 	};
 }
 
+function setOptionSetting(url, findSettingID, setVariableName) {
+	
+  var setValue = $('input:radio[id=' + findSettingID + ']:checked').val();
+	var xmlhttp = new XMLHttpRequest();
+	var csrfToken = document.getElementById("csrfToken").value;
+	var params = "" + setVariableName + "=" + setValue + "&csrfToken=" + csrfToken;
+	xmlhttp.open("POST", url, true);
+	xmlhttp.withCredentials = true;
+	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xmlhttp.send(params);
+
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4) {
+			var response = xmlhttp.responseText;
+			var xmlDoc = $(response);
+			var msgElem  = xmlDoc.find("#global-error").find("strong")[0];
+			$("#div-error-messages").append(msgElem);
+			$("#div-error-messages").append(" for " + setVariableName + "<br />");
+			//return msgText;
+		}
+	};
+}
+
+function setAllSettings() {
+	$("#div-error-messages").html("");
+	
+	var url = "https://www.linkedin.com/settings/activity-broadcasts-submit";
+	var findID = "input-activity-broadcasts";
+	var setVariableName = "activity";
+	var setValue = "activity";
+	setRadioSetting(url, findID, setVariableName, setValue);
+	
+	var url2 = "https://www.linkedin.com/settings/browse-map-submit";
+	var findID2 = "input-browseparam-browsemap";
+	var setVariableName2 = "browseMapParam";
+	var setValue2 = "browseMapParam";
+	setRadioSetting(url2, findID2, setVariableName2, setValue2);
+	
+	var url3 = "https://www.linkedin.com/settings/activity-visibility-submit";
+	var findID3 = "select-activityfeed-activityfeed";
+	var setVariableName3 = "activityFeed";
+	setOptionSetting(url3, findID3, setVariableName3);
+	
+}
+
+
 function onPageInfo(o) { 
-	//document.getElementById("title").value = o.title; 
-	//document.getElementById("url").value = o.url; 
 	document.getElementById("csrfToken").value = o.csrfToken; 
 } 
 
 function test() {
 	console.log("11111111 found xxxxxxxxxx ");
-	$("#btn-set-all-settings").click(setGlobalSettings);
+	$("#btn-set-all-settings").click(setAllSettings);
 	$("#btn-get-all-settings").click(getAllSettings);
   var bg = chrome.extension.getBackgroundPage();
   bg.getPageInfo(onPageInfo);

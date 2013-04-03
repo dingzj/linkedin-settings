@@ -7,21 +7,20 @@
     <script type="text/javascript" src="jquery-ui/js/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="popup.js"></script>
   </head>
-  <body id="main">    
+  <body id="main">
+    <div id="div-error-messages"></div> <br /> <br />
     <div id="div-all-settings">
       <fieldset>
         <legend>Profile Settings: </legend>
-        <p>
           <div id="div-activity-broadcasts"></div>
           <div id="div-browseparam-browsemap"></div>
           <div id="div-activityfeed-activityfeed"></div>
-        </p>
       </fieldset>
-      <input type="button" id="btn-get-all-settings" name="get-all-settings" value="Collect Your Settings">
+      <input type="button" id="btn-get-all-settings" name="get-all-settings" value="Load Your Settings">
       <input type="button" id="btn-set-all-settings" name="set-all-settings" value="Submit Your Settings">
     </div>
 
-    <div id="div-set-global-level">
+    <div id="div-set-global-level" style="display:none">
       <fieldset>
         <legend>Select your privacy Level:</legend>
         <input type="radio" name="global-level" value="High">High<br>
@@ -32,7 +31,7 @@
     </div>
 
     
-    <div id="debug-form">
+    <div id="debug-form"  style="display:none">
       <fieldset>
         <legend> Debugging information </legend>
       	<p><label for="csrfToken">csrfToken</label><br />
