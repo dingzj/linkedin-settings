@@ -2,12 +2,48 @@
 
 var loadRadioArr = [ab, bm, la, ri, pim, pih];
 var loadOptionArr = [av, cv, ppv];
+var URL = "https://www.linkedin.com/settings/";		
 
-function getRadioSetting(url, findSettingID, setDivID, setInputID, setLabel, obj) {
+/* Prepare objects such its values will be used later
+----------------------------------*/
+
+function prepareRadioObject(obj) {
+	// get value part
+	obj.setDivID = (obj.setName == null) ? "div-"+obj.name : "div-"+obj.setName;
+	obj.setInputID = (obj.setName == null) ? "input-"+obj.name : "input-"+obj.setName;
+	obj.getUrl = (obj.getPath == null) ? URL+obj.name : obj.getPath;
+	// set value part
+	obj.submitUrl = (obj.submitPath == null) ? URL+obj.name+"-submit" : obj.submitPath+"-submit";
+	obj.setFindID = (obj.setName == null) ? "input-"+obj.name : "input-"+obj.setName;
+	return obj;
+}
+
+function prepareOptionObject(obj) {
+	// get value part
+	obj.setDivID = (obj.setName == null) ? "div-"+obj.name : "div-"+obj.setName;
+	obj.setInputID = (obj.setName == null) ? "select-"+obj.name : "input-"+obj.setName;
+	obj.getUrl = (obj.getPath == null) ? URL+obj.name : obj.getPath;	
+	// set value part
+	obj.submitUrl = (obj.submitPath == null) ? URL+obj.name+"-submit" : obj.submitPath+"-submit";
+	obj.setFindID = (obj.setName == null) ? "select-"+obj.name : "select-"+obobj.j.setName;
+	return obj;
+}
+
+function prepareAllObjects() {
+	for (i=0; i<loadRadioArr.length; i++) { prepareRadioObject(loadRadioArr[i]); }
+	for (i=0; i<loadOptionArr.length; i++) { prepareOptionObject(loadOptionArr[i]); }
+}
+
+/* Load user's Linkedin Settings, and display it properly in popup window
+----------------------------------*/
+
+function getRadioSetting(obj) {		
+	$("#" + obj.setDivID).html("");
+	
 	var xmlhttp = new XMLHttpRequest();
 	var csrfToken = document.getElementById("csrfToken").value;
 	var params = "csrfToken="+csrfToken;
-	xmlhttp.open("GET", url, true);
+	xmlhttp.open("GET", obj.getUrl, true);
 	xmlhttp.withCredentials = true;
 	xmlhttp.setRequestHeader("content-type", "application/x-www-form-urlencoded");
 	xmlhttp.send(params);
@@ -15,27 +51,25 @@ function getRadioSetting(url, findSettingID, setDivID, setInputID, setLabel, obj
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4) {
 			var xmlDoc = $(xmlhttp.responseText);
-			var msgElem  = xmlDoc.find("#"+findSettingID);
+			var msgElem  = xmlDoc.find("#" + obj.findID);
+			var checked = "";
+			obj.curValue = false;
 			if (msgElem[0].checked === true) {
-				$("#"+setDivID).html("<input type=\"checkbox\" id=\"" + setInputID + "\" value=\"set\" checked> <label for=\"" + setInputID + "\"> " + setLabel + "</label> ");
-				if (obj !== null) {
-					obj.curValue = true;
-				}
-			} else {
-				$("#"+setDivID).html("<input type=\"checkbox\" id=\"" + setInputID + "\" value=\"set\"> <label for=\"" + setInputID + "\"> " + setLabel + "</label> ");
-				if (obj !== null) {
-					obj.curValue = false;
-				}
+				obj.curValue = true;
+				checked = "checked";
 			}
+			$("#" + obj.setDivID).html("<input type=\"checkbox\" id=\"" + obj.setInputID + "\" value=\"set\" " + checked + "> <label for=\"" + obj.setInputID + "\"> " + obj.setLabel + "</label> ");
 		}
 	}
 }
 
-function getOptionSetting(url, findSettingID, setDivID, setInputID, setLabel, obj) {
+function getOptionSetting(obj) {	
+	$("#" + obj.setDivID).html("");
+	
 	var xmlhttp = new XMLHttpRequest();
 	var csrfToken = document.getElementById("csrfToken").value;
 	var params = "csrfToken="+csrfToken;
-	xmlhttp.open("GET", url, true);
+	xmlhttp.open("GET", obj.getUrl, true);
 	xmlhttp.withCredentials = true;
 	xmlhttp.setRequestHeader("content-type", "application/x-www-form-urlencoded");
 	xmlhttp.send(params);
@@ -43,47 +77,45 @@ function getOptionSetting(url, findSettingID, setDivID, setInputID, setLabel, ob
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4) {
 			var xmlDoc = $(xmlhttp.responseText);
-			var nodes  = xmlDoc.find("#"+findSettingID)[0].childNodes;
-			var html = "<label for=\"" + setDivID + "\"> " + setLabel + "</label> <br />";
+			var nodes  = xmlDoc.find("#"+obj.findID)[0].childNodes;
+			var html = "<label for=\"" + obj.setDivID + "\"> " + obj.setLabel + "</label> <br />";
 			for (i=1; i<nodes.length; i++) {
 				var checked = "";
 				if (nodes[i].getAttribute("selected") == "") {
 					checked = " checked ";
-					if (obj !== null) {
-						obj.curValue = nodes[i].value;
-					}
+					obj.curValue = nodes[i].value;
 				}
-				html += "<input type=\"radio\" id=\"" + setInputID + "\" value=\"" + nodes[i].value + "\"  name=\"" + setInputID + "\" " + checked + " /> <label for=\"" + setInputID + "\"> " + nodes[i].text + "</label> <br /> \n" ;
+				html += "<input type=\"radio\" id=\"" + obj.setInputID + "-" + nodes[i].value + "\" value=\"" + nodes[i].value + "\"  name=\"" + obj.setInputID + "\" " + checked + " /> <label for=\"" + obj.setInputID + "\"> " + nodes[i].text + "</label> <br /> \n";
 			}
-			$("#"+setDivID).html(html);
+			$("#"+obj.setDivID).html(html);
 		}
 	}
 }
 
 function getAllSettings() {
 	$("#div-error-messages").html("");
-	var URL = "https://www.linkedin.com/settings/";		
-	for (i=0; i<loadRadioArr.length; i++) {
-		var e = loadRadioArr[i];
-		var divname = (e.setName == null) ? "div-"+e.name : "div-"+e.setName;
-		var inputname = (e.setName == null) ? "input-"+e.name : "input-"+e.setName;
-		var getUrl = (e.getPath == null) ? URL+e.name : e.getPath;
-		getRadioSetting(getUrl, e.findID, divname, inputname, e.setLabel, e);
-	}
-	for (i=0; i<loadOptionArr.length; i++) {
-		var e = loadOptionArr[i];
-		var getUrl = (e.getPath == null) ? URL+e.name : e.getPath;
-		getOptionSetting(getUrl, e.findID, "div-"+e.name, "select-"+e.name, e.setLabel, e);
-	}
+	$("#btn-recommend-all-settings")[0].style.visibility = "visible";
+	$("#btn-set-all-settings")[0].style.visibility = "visible";
+	
+	for (i=0; i<loadRadioArr.length; i++) { getRadioSetting(loadRadioArr[i]); }
+	for (i=0; i<loadOptionArr.length; i++) { getOptionSetting(loadOptionArr[i]); }
 }
 
-function setRadioSetting(url, findSettingID, setVarName, setValue) {
-  var checked = $('#'+ findSettingID)[0].checked;
+/* Submit user's Linkedin Settings, send xmlhttp request if value changes
+----------------------------------*/
+
+function setRadioSetting(obj) {
+	obj.newValue = $("#"+obj.setFindID)[0].checked;
+	if (obj.newValue === obj.curValue) {
+		$("#div-error-messages").append(" No change for <strong> " + (obj.setName || obj.name) + "</strong> <br />");
+		return; 
+	}
+		
 	var xmlhttp = new XMLHttpRequest();
 	var csrfToken = document.getElementById("csrfToken").value;
-	setValue = checked ? setValue : "";
-	var params = "" + setVarName + "=" + setValue + "&csrfToken=" + csrfToken;
-	xmlhttp.open("POST", url, true);
+	setValue = obj.newValue ? obj.setVarName : "";
+	var params = "" + obj.setVarName + "=" + setValue + "&csrfToken=" + csrfToken;
+	xmlhttp.open("POST", obj.submitUrl, true);
 	xmlhttp.withCredentials = true;
 	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xmlhttp.send(params);
@@ -94,19 +126,22 @@ function setRadioSetting(url, findSettingID, setVarName, setValue) {
 			var xmlDoc = $(response);
 			var msgElem  = xmlDoc.find("#global-error").find("strong")[0];
 			$("#div-error-messages").append(msgElem);
-			$("#div-error-messages").append(" for " + setVarName + "<br />");
-			//return msgText;
+			$("#div-error-messages").append(" for " + obj.setVarName + "<br />");
 		}
 	};
 }
 
-function setOptionSetting(url, findSettingID, setVarName) {
+function setOptionSetting(obj) {
+	obj.newValue = $('input:radio[name=' + obj.setFindID + ']:checked').val();
+	if (obj.newValue === obj.curValue) {
+		$("#div-error-messages").append(" No change for <strong> " + (obj.setName || obj.name) + "</strong> <br />");
+		return; 
+	}
 	
-  var setValue = $('input:radio[id=' + findSettingID + ']:checked').val();
 	var xmlhttp = new XMLHttpRequest();
 	var csrfToken = document.getElementById("csrfToken").value;
-	var params = "" + setVarName + "=" + setValue + "&csrfToken=" + csrfToken;
-	xmlhttp.open("POST", url, true);
+	var params = "" + obj.setVarName + "=" + obj.newValue + "&csrfToken=" + csrfToken;
+	xmlhttp.open("POST", obj.submitUrl, true);
 	xmlhttp.withCredentials = true;
 	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xmlhttp.send(params);
@@ -117,53 +152,66 @@ function setOptionSetting(url, findSettingID, setVarName) {
 			var xmlDoc = $(response);
 			var msgElem  = xmlDoc.find("#global-error").find("strong")[0];
 			$("#div-error-messages").append(msgElem);
-			$("#div-error-messages").append(" for " + setVarName + "<br />");
-			//return msgText;
+			$("#div-error-messages").append(" for " + obj.setVarName + "<br />");
 		}
 	};
 }
 
 function setAllSettings() {
 	$("#div-error-messages").html("");
-	var URL = "https://www.linkedin.com/settings/";
 	
-	for (i=0; i<loadRadioArr.length; i++) {
-		var e = loadRadioArr[i];
-		var inputname = (e.setName == null) ? "input-"+e.name : "input-"+e.setName;
-		var submitUrl = (e.submitPath == null) ? URL+e.name : e.submitPath;
-		e.newValue = $("#"+inputname)[0].checked;
-		if (e.newValue !== e.curValue) {
-			setRadioSetting(submitUrl+"-submit", inputname, e.setVarName, e.setVarName);
-		} else {
-			$("#div-error-messages").append(" Values did not change for <strong> " + e.name + "</strong> <br />");
-		}
-	}
+	for (i=0; i<loadRadioArr.length; i++) { setRadioSetting(loadRadioArr[i]); }
+	for (i=0; i<loadOptionArr.length; i++) { setOptionSetting(loadOptionArr[i]); }
+}
 
-	var loadOptionArr = [av, cv, ppv];
-	for (i=0; i<loadOptionArr.length; i++) {
-		var e = loadOptionArr[i];
-		var submitUrl = (e.submitPath == null) ? URL+e.name : e.submitPath;
-		var selectname = "select-"+e.name;
-		e.newValue = setValue = $('input:radio[id=' + selectname + ']:checked').val();
-		if (e.newValue !== e.curValue) {
-			setOptionSetting(submitUrl+"-submit", selectname, e.setVarName);
-		} else {
-			$("#div-error-messages").append(" Values did not change for <strong> " + e.name + "</strong> <br />");
-		}
+/* Choose the recommended Settings on popup window, not xmlhttp request sent yet
+----------------------------------*/
+
+function recommendRadioSetting(obj) {
+	obj.newValue = $("#"+obj.setFindID)[0].checked;
+	if (obj.newValue !== obj.setRecommendValue) {
+		$("#"+obj.setFindID)[0].click();
 	}
 }
 
+function recommendOptionSetting(obj) {
+	obj.newValue = $('input:radio[name=' + obj.setFindID + ']:checked').val();
+	if (obj.newValue !== obj.setRecommendValue) {
+		$("#"+obj.setFindID+"-"+obj.setRecommendValue)[0].click();
+	}
+}
+
+function recommendSettings() {
+	for (i=0; i<loadRadioArr.length; i++) { recommendRadioSetting(loadRadioArr[i]); }
+	for (i=0; i<loadOptionArr.length; i++) { recommendOptionSetting(loadOptionArr[i]); }
+}
+
+/* Parse the csrfToken to popup window, such that xmlhttp request can get valid response
+----------------------------------*/
 
 function onPageInfo(o) { 
 	document.getElementById("csrfToken").value = o.csrfToken; 
-} 
+}
+
 
 function test() {
-	console.log("11111111 found xxxxxxxxxx ");
-	$("#btn-set-all-settings").click(setAllSettings);
-	$("#btn-get-all-settings").click(getAllSettings);
+	console.log("--- Starting main function call ");
+	prepareAllObjects();
+	
+	console.log("--- Object prepared ready, get csrfToken now");
   var bg = chrome.extension.getBackgroundPage();
   bg.getPageInfo(onPageInfo);
+	
+	console.log("--- Binding the function to buttons now");
+	
+	$("#btn-get-all-settings").click(getAllSettings);
+	
+	$("#btn-set-all-settings").click(setAllSettings);
+	$("#btn-set-all-settings")[0].style.visibility = "hidden";
+
+	$("#btn-recommend-all-settings").click(recommendSettings);
+	$("#btn-recommend-all-settings")[0].style.visibility = "hidden";	
 }
 
 window.onload = test;
+

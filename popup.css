@@ -1,6 +1,6 @@
 #main {
-  width: 400px;
-  height: 600px;
+  width: 500px;
+  height: 900px;
 }
 
 body {
@@ -8,8 +8,8 @@ body {
   font-size: 75%;
   cursor: default;
   margin: 0;
-  width: 410px;
-  height: 610px;
+  width: 510px;
+  height: 910px;
 }
 a {
   border: none;
