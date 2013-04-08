@@ -1,13 +1,14 @@
 #main {
-  width: 500px;
-  height: 900px;
+	width: 500px;
+	height: 900px;
+	margin-left: 10px;
 }
 
 body {
   font-family: 'Chrome Droid Sans', 'Droid Sans Fallback', 'Lucida Grande', sans-serif;
   font-size: 75%;
   cursor: default;
-  margin: 0;
+  margin: 0px;
   width: 510px;
   height: 910px;
 }
@@ -337,6 +338,7 @@ button {
   margin: 0 1px 0 0;
   text-shadow: 0 1px 0 #F0F0F0;
 }
+
 button.small {
   padding: 1px 5px 2px;
   min-height: 1em;

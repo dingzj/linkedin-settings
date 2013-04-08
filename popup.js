@@ -3,6 +3,8 @@
 var loadRadioArr = [ab, bm, la, ri, pim, pih];
 var loadOptionArr = [av, cv, ppv];
 var URL = "https://www.linkedin.com/settings/";		
+var csrfToken = "";
+
 
 /* Prepare objects such its values will be used later
 ----------------------------------*/
@@ -41,7 +43,7 @@ function getRadioSetting(obj) {
 	$("#" + obj.setDivID).html("");
 	
 	var xmlhttp = new XMLHttpRequest();
-	var csrfToken = document.getElementById("csrfToken").value;
+	//var csrfToken = document.getElementById("csrfToken").value;
 	var params = "csrfToken="+csrfToken;
 	xmlhttp.open("GET", obj.getUrl, true);
 	xmlhttp.withCredentials = true;
@@ -67,7 +69,7 @@ function getOptionSetting(obj) {
 	$("#" + obj.setDivID).html("");
 	
 	var xmlhttp = new XMLHttpRequest();
-	var csrfToken = document.getElementById("csrfToken").value;
+	//var csrfToken = document.getElementById("csrfToken").value;
 	var params = "csrfToken="+csrfToken;
 	xmlhttp.open("GET", obj.getUrl, true);
 	xmlhttp.withCredentials = true;
@@ -78,15 +80,16 @@ function getOptionSetting(obj) {
 		if (xmlhttp.readyState == 4) {
 			var xmlDoc = $(xmlhttp.responseText);
 			var nodes  = xmlDoc.find("#"+obj.findID)[0].childNodes;
-			var html = "<label for=\"" + obj.setDivID + "\"> " + obj.setLabel + "</label> <br />";
+			var html = "<label for=\"" + obj.setDivID + "\"> " + obj.setLabel + "</label> <br /> <ul>";
 			for (i=1; i<nodes.length; i++) {
 				var checked = "";
 				if (nodes[i].getAttribute("selected") == "") {
 					checked = " checked ";
 					obj.curValue = nodes[i].value;
 				}
-				html += "<input type=\"radio\" id=\"" + obj.setInputID + "-" + nodes[i].value + "\" value=\"" + nodes[i].value + "\"  name=\"" + obj.setInputID + "\" " + checked + " /> <label for=\"" + obj.setInputID + "\"> " + nodes[i].text + "</label> <br /> \n";
+				html += "<input type=\"radio\" id=\"" + obj.setInputID + "\" value=\"" + nodes[i].value + "\"  name=\"" + obj.setInputID + "\" " + checked + " /> <label for=\"" + obj.setInputID + "\"> " + nodes[i].text + "</label> <br /> \n";
 			}
+			html += "</ul>";
 			$("#"+obj.setDivID).html(html);
 		}
 	}
@@ -105,14 +108,17 @@ function getAllSettings() {
 ----------------------------------*/
 
 function setRadioSetting(obj) {
-	obj.newValue = $("#"+obj.setFindID)[0].checked;
+	if ($("#"+obj.setFindID)[0] == null) {
+		obj.newValue = obj.setRecommendValue;
+	} else {
+		obj.newValue = $("#"+obj.setFindID)[0].checked;	
+	}
 	if (obj.newValue === obj.curValue) {
-		$("#div-error-messages").append(" No change for <strong> " + (obj.setName || obj.name) + "</strong> <br />");
+		//$("#div-error-messages").append(" No change for <strong> " + (obj.setName || obj.name) + "</strong> <br />");
 		return; 
 	}
-		
 	var xmlhttp = new XMLHttpRequest();
-	var csrfToken = document.getElementById("csrfToken").value;
+	//var csrfToken = document.getElementById("csrfToken").value;
 	setValue = obj.newValue ? obj.setVarName : "";
 	var params = "" + obj.setVarName + "=" + setValue + "&csrfToken=" + csrfToken;
 	xmlhttp.open("POST", obj.submitUrl, true);
@@ -125,6 +131,8 @@ function setRadioSetting(obj) {
 			var response = xmlhttp.responseText;
 			var xmlDoc = $(response);
 			var msgElem  = xmlDoc.find("#global-error").find("strong")[0];
+			obj.curValue = obj.newValue;
+			$("#div-progress-messages").html("");
 			$("#div-error-messages").append(msgElem);
 			$("#div-error-messages").append(" for " + obj.setVarName + "<br />");
 		}
@@ -132,14 +140,17 @@ function setRadioSetting(obj) {
 }
 
 function setOptionSetting(obj) {
-	obj.newValue = $('input:radio[name=' + obj.setFindID + ']:checked').val();
+	obj.newValue = $('input:radio[id=' + obj.setFindID + ']:checked').val();
+	if (obj.newValue == null) {
+		obj.newValue = obj.setRecommendValue;
+	}
 	if (obj.newValue === obj.curValue) {
-		$("#div-error-messages").append(" No change for <strong> " + (obj.setName || obj.name) + "</strong> <br />");
+		//$("#div-error-messages").append(" No change for <strong> " + (obj.setName || obj.name) + "</strong> <br />");
 		return; 
 	}
 	
 	var xmlhttp = new XMLHttpRequest();
-	var csrfToken = document.getElementById("csrfToken").value;
+	//var csrfToken = document.getElementById("csrfToken").value;
 	var params = "" + obj.setVarName + "=" + obj.newValue + "&csrfToken=" + csrfToken;
 	xmlhttp.open("POST", obj.submitUrl, true);
 	xmlhttp.withCredentials = true;
@@ -151,6 +162,8 @@ function setOptionSetting(obj) {
 			var response = xmlhttp.responseText;
 			var xmlDoc = $(response);
 			var msgElem  = xmlDoc.find("#global-error").find("strong")[0];
+			obj.curValue = obj.newValue;
+			$("#div-progress-messages").html("");
 			$("#div-error-messages").append(msgElem);
 			$("#div-error-messages").append(" for " + obj.setVarName + "<br />");
 		}
@@ -159,6 +172,7 @@ function setOptionSetting(obj) {
 
 function setAllSettings() {
 	$("#div-error-messages").html("");
+	$("#div-progress-messages").html("");
 	
 	for (i=0; i<loadRadioArr.length; i++) { setRadioSetting(loadRadioArr[i]); }
 	for (i=0; i<loadOptionArr.length; i++) { setOptionSetting(loadOptionArr[i]); }
@@ -175,9 +189,9 @@ function recommendRadioSetting(obj) {
 }
 
 function recommendOptionSetting(obj) {
-	obj.newValue = $('input:radio[name=' + obj.setFindID + ']:checked').val();
+	obj.newValue = $('input:radio[id=' + obj.setFindID + ']:checked').val();
 	if (obj.newValue !== obj.setRecommendValue) {
-		$("#"+obj.setFindID+"-"+obj.setRecommendValue)[0].click();
+		$('input:radio[id=' + obj.setFindID + '][value=' + obj.setRecommendValue + ']')[0].click();
 	}
 }
 
@@ -191,27 +205,35 @@ function recommendSettings() {
 
 function onPageInfo(o) { 
 	document.getElementById("csrfToken").value = o.csrfToken; 
+	csrfToken = o.csrfToken;
+	console.log("--- onPageInfo csrfToken = " + csrfToken);
 }
 
 
-function test() {
+function mainFunction() {
 	console.log("--- Starting main function call ");
 	prepareAllObjects();
 	
 	console.log("--- Object prepared ready, get csrfToken now");
   var bg = chrome.extension.getBackgroundPage();
   bg.getPageInfo(onPageInfo);
-	
 	console.log("--- Binding the function to buttons now");
 	
 	$("#btn-get-all-settings").click(getAllSettings);
+	//$("#btn-get-all-settings").click();
+	
+	$("#btn-recommend-all-settings").click(recommendSettings);
+	$("#btn-recommend-all-settings")[0].style.visibility = "hidden";	
+	//$("#btn-recommend-all-settings").click();
 	
 	$("#btn-set-all-settings").click(setAllSettings);
 	$("#btn-set-all-settings")[0].style.visibility = "hidden";
-
-	$("#btn-recommend-all-settings").click(recommendSettings);
-	$("#btn-recommend-all-settings")[0].style.visibility = "hidden";	
+	setTimeout(function () {
+		if (csrfToken !== "") {
+			console.log("--- .5 seconds over, sent settings with recommended values");
+			$("#btn-set-all-settings").click();	
+		}
+	}, 500);
 }
 
-window.onload = test;
-
+window.onload = mainFunction;

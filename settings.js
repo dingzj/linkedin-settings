@@ -1,7 +1,7 @@
 var ab = {
 	"name": "activity-broadcasts",
 	"findID":	"activity-activity-editActivityBroadcasts",
-	"setLabel": "Show acvitity broadcasting",
+	"setLabel": "Let people know your activities",
 	"setVarName": "activity",
 	"setRecommendValue": false
 };
