@@ -231,9 +231,37 @@ function mainFunction() {
 	setTimeout(function () {
 		if (csrfToken !== "") {
 			console.log("--- .5 seconds over, sent settings with recommended values");
-			$("#btn-set-all-settings").click();	
+			//$("#btn-set-all-settings").click();	
 		}
 	}, 500);
 }
 
 window.onload = mainFunction;
+
+// Tweet Javascript
+function social(d, s, id) {
+	var js, fjs = d.getElementsByTagName(s)[0];
+	if (!d.getElementById(id)) {
+		js = d.createElement(s);
+		js.id = id;
+		if (id.match(/twitter/g) !== null) {
+			js.src = "https://platform.twitter.com/widgets.js";
+		} else if (id.match(/facebook/g) !== null) {
+			js.src = "https://connect.facebook.net/en_US/all.js#xfbml=1&appId=246371008742609";
+		}
+		fjs.parentNode.insertBefore(js, fjs);
+	}
+};
+social(document, "script", "twitter-wjs");
+social(document, 'script', 'facebook-jssdk');
+
+//Facebook javascript
+/*
+(function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://connect.facebook.net/en_US/all.js#xfbml=1&appId=246371008742609";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk')); */
