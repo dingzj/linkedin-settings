@@ -1,10 +1,12 @@
 //$.getScript("settings.js");
-
 var loadRadioArr = [ab, bm, la, ri, pim, pih];
 var loadOptionArr = [av, cv, ppv];
 var URL = "https://www.linkedin.com/settings/";		
 var csrfToken = "";
+var DOMAIN = 'barracudalabs.com';
 
+var firstRun = (localStorage['firstRun'] == 'true');
+var lastRecommendSetTime = localStorage['lastRecommendSetTime'];
 
 /* Prepare objects such its values will be used later
 ----------------------------------*/
@@ -87,7 +89,7 @@ function getOptionSetting(obj) {
 					checked = " checked ";
 					obj.curValue = nodes[i].value;
 				}
-				html += "<input type=\"radio\" id=\"" + obj.setInputID + "\" value=\"" + nodes[i].value + "\"  name=\"" + obj.setInputID + "\" " + checked + " /> <label for=\"" + obj.setInputID + "\"> " + nodes[i].text + "</label> <br /> \n";
+				html += "<li> <input type=\"radio\" id=\"" + obj.setInputID + "\" value=\"" + nodes[i].value + "\"  name=\"" + obj.setInputID + "\" " + checked + " /> <label for=\"" + obj.setInputID + "\"> " + nodes[i].text + "</label> </li> \n";
 			}
 			html += "</ul>";
 			$("#"+obj.setDivID).html(html);
@@ -96,7 +98,7 @@ function getOptionSetting(obj) {
 }
 
 function getAllSettings() {
-	$("#div-error-messages").html("");
+	$("#div-customize-message").html("");
 	$("#btn-recommend-all-settings")[0].style.visibility = "visible";
 	$("#btn-set-all-settings")[0].style.visibility = "visible";
 	
@@ -107,14 +109,14 @@ function getAllSettings() {
 /* Submit user's Linkedin Settings, send xmlhttp request if value changes
 ----------------------------------*/
 
-function setRadioSetting(obj) {
+function setRadioSetting2(obj) {
 	if ($("#"+obj.setFindID)[0] == null) {
 		obj.newValue = obj.setRecommendValue;
 	} else {
 		obj.newValue = $("#"+obj.setFindID)[0].checked;	
 	}
 	if (obj.newValue === obj.curValue) {
-		//$("#div-error-messages").append(" No change for <strong> " + (obj.setName || obj.name) + "</strong> <br />");
+		//$("#div-customize-message").append(" No change for <strong> " + (obj.setName || obj.name) + "</strong> <br />");
 		return; 
 	}
 	var xmlhttp = new XMLHttpRequest();
@@ -132,50 +134,75 @@ function setRadioSetting(obj) {
 			var xmlDoc = $(response);
 			var msgElem  = xmlDoc.find("#global-error").find("strong")[0];
 			obj.curValue = obj.newValue;
-			$("#div-progress-messages").html("");
-			$("#div-error-messages").append(msgElem);
-			$("#div-error-messages").append(" for " + obj.setVarName + "<br />");
+			//$("#div-customize-message").append(msgElem);
+			//$("#div-customize-message").append(" for " + obj.setVarName + "<br />");
 		}
 	};
 }
+
+function setRadioSetting(obj) {
+	if ($("#"+obj.setFindID)[0] == null) {
+		obj.newValue = obj.setRecommendValue;
+	} else {
+		obj.newValue = $("#"+obj.setFindID)[0].checked;	
+	}
+	if (obj.newValue === obj.curValue) { return; }
+	setValue = obj.newValue ? obj.setVarName : "";
+	var params = "" + obj.setVarName + "=" + setValue + "&csrfToken=" + csrfToken;
+	var request = $.ajax({
+		url: obj.submitUrl,
+		type: "POST",
+		dataType: "HTML",
+		data: params
+	});
+
+	return request.success(function (response, textStatus, jqXHR){
+			var xmlDoc = $(response);
+			console.log("This ajax responsed - " + obj.name);
+			var msgElem  = xmlDoc.find("#global-error").find("strong")[0];
+			obj.curValue = obj.newValue;
+			//$("#div-customize-message").append(msgElem);
+			//$("#div-customize-message").append(" for " + obj.setVarName + "<br />");
+	});
+}
+
 
 function setOptionSetting(obj) {
 	obj.newValue = $('input:radio[id=' + obj.setFindID + ']:checked').val();
-	if (obj.newValue == null) {
-		obj.newValue = obj.setRecommendValue;
-	}
-	if (obj.newValue === obj.curValue) {
-		//$("#div-error-messages").append(" No change for <strong> " + (obj.setName || obj.name) + "</strong> <br />");
-		return; 
-	}
+	if (obj.newValue == null) { obj.newValue = obj.setRecommendValue; }
+	if (obj.newValue === obj.curValue) { return;  }
 	
-	var xmlhttp = new XMLHttpRequest();
-	//var csrfToken = document.getElementById("csrfToken").value;
 	var params = "" + obj.setVarName + "=" + obj.newValue + "&csrfToken=" + csrfToken;
-	xmlhttp.open("POST", obj.submitUrl, true);
-	xmlhttp.withCredentials = true;
-	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xmlhttp.send(params);
+	var request = $.ajax({
+		url: obj.submitUrl,
+		type: "POST",
+		dataType: "HTML",
+		data: params
+	});
 
-	xmlhttp.onreadystatechange = function() {
-		if (xmlhttp.readyState == 4) {
-			var response = xmlhttp.responseText;
+	return request.success(function (response, textStatus, jqXHR){
 			var xmlDoc = $(response);
+			console.log("This ajax responsed - " + obj.name);
 			var msgElem  = xmlDoc.find("#global-error").find("strong")[0];
 			obj.curValue = obj.newValue;
-			$("#div-progress-messages").html("");
-			$("#div-error-messages").append(msgElem);
-			$("#div-error-messages").append(" for " + obj.setVarName + "<br />");
-		}
-	};
+	});
 }
 
 function setAllSettings() {
-	$("#div-error-messages").html("");
-	$("#div-progress-messages").html("");
+	$("#div-customize-message").html("<div class='alert alert-success'>We are fixing your settings now, please wait...</div>");
+	var deferreds = [];
+	for (i=0; i<loadRadioArr.length; i++) { 
+		deferreds.push(setRadioSetting(loadRadioArr[i]));
+	}
+	for (i=0; i<loadOptionArr.length; i++) { 
+		deferreds.push(setOptionSetting(loadOptionArr[i]));
+	}
+	localStorage['lastRecommendSetTime'] = new Date().toString().replace(/ GMT.*$/, "");
 	
-	for (i=0; i<loadRadioArr.length; i++) { setRadioSetting(loadRadioArr[i]); }
-	for (i=0; i<loadOptionArr.length; i++) { setOptionSetting(loadOptionArr[i]); }
+	$.when(deferreds).done(function() {
+		$("#div-customize-message").html("<div class='alert alert-success'>We have fixed all your privacy settings! Cheers!</div>");
+		$("#div-home-message").html("<div class='alert alert-success'>You have customized your settings on " + lastRecommendSetTime+"</div>");
+	});
 }
 
 /* Choose the recommended Settings on popup window, not xmlhttp request sent yet
@@ -209,6 +236,11 @@ function onPageInfo(o) {
 	console.log("--- onPageInfo csrfToken = " + csrfToken);
 }
 
+function deleteLocalStorage() {
+	console.log("--- delete localStorage now....");
+	localStorage.removeItem('firstRun');
+	localStorage.removeItem('lastRecommendSetTime');
+}
 
 function mainFunction() {
 	console.log("--- Starting main function call ");
@@ -228,12 +260,34 @@ function mainFunction() {
 	
 	$("#btn-set-all-settings").click(setAllSettings);
 	$("#btn-set-all-settings")[0].style.visibility = "hidden";
-	setTimeout(function () {
-		if (csrfToken !== "") {
-			console.log("--- .5 seconds over, sent settings with recommended values");
-			//$("#btn-set-all-settings").click();	
+	
+	$("#btn-delete-local-storage").click(deleteLocalStorage);
+	
+	if (!firstRun) {
+		// Open the options page if this is the first run
+		localStorage['firstRun'] = 'true';
+		console.log("--- First Time RUN: will send settings with recommended values");
+		$("#div-home-message").html("<div class='alert alert-success'>We are checking your Linkedin Settings now...</div>");
+		setTimeout(function () {
+			if (csrfToken !== "") {
+				console.log("--- .5 seconds over, sent settings with recommended values");
+				$("#btn-set-all-settings").click();	
+			}
+		}, 500);
+	};
+	
+	if ( lastRecommendSetTime != null ) {
+		$("#div-home-message").html("<div class='alert alert-success'>We have fixed your settings on " + lastRecommendSetTime+"</div>");
+	}
+	// Auto-load customize Tab after click
+	$('#customize-tab-href').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+		if ( $("#btn-recommend-all-settings")[0].getAttribute("style").match("hidden") != null ) {
+			$("#btn-get-all-settings").click();
 		}
-	}, 500);
+		$("#div-customize-message").html("");
+	});
 }
 
 window.onload = mainFunction;

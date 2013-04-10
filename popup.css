@@ -14,7 +14,7 @@ body {
 }
 a {
   border: none;
-  margin: 10px;
+  margin: 1px;
   color: #15C;
   cursor: pointer;
   text-decoration: none;
@@ -338,7 +338,7 @@ button {
   font: inherit;
   margin: 0 1px 0 0;
   text-shadow: 0 1px 0 #F0F0F0;
-}
+} !important;
 
 button.small {
   padding: 1px 5px 2px;
@@ -395,12 +395,18 @@ input[type='radio'] {
   /* OVERRIDE */
 
   border-radius: 100%;
-  bottom: 3px;
+  bottom: 0px;
   height: 15px;
   position: relative;
   vertical-align: middle;
   width: 15px;
 }
+
+li input[type='radio'] {
+	float:left; 
+	clear:none;
+}
+
 button {
   -webkit-padding-end: 10px;
   -webkit-padding-start: 10px;
