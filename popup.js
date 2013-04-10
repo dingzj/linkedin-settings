@@ -46,57 +46,55 @@ function prepareAllObjects() {
 function getRadioSetting(obj) {		
 	$("#" + obj.setDivID).html("");
 	
-	var xmlhttp = new XMLHttpRequest();
-	//var csrfToken = document.getElementById("csrfToken").value;
 	var params = "csrfToken="+csrfToken;
-	xmlhttp.open("GET", obj.getUrl, true);
-	xmlhttp.withCredentials = true;
-	xmlhttp.setRequestHeader("content-type", "application/x-www-form-urlencoded");
-	xmlhttp.send(params);
+	var request = $.ajax({
+		url: obj.getUrl,
+		type: "GET",
+		dataType: "HTML",
+		data: params
+	});
 	
-	xmlhttp.onreadystatechange = function() {
-		if (xmlhttp.readyState == 4) {
-			var xmlDoc = $(xmlhttp.responseText);
-			var msgElem  = xmlDoc.find("#" + obj.findID);
-			var checked = "";
-			obj.curValue = false;
-			if (msgElem[0].checked === true) {
-				obj.curValue = true;
-				checked = "checked";
-			}
-			$("#" + obj.setDivID).html("<input type=\"checkbox\" id=\"" + obj.setInputID + "\" value=\"set\" " + checked + "> <label for=\"" + obj.setInputID + "\"> " + obj.setLabel + "</label> ");
+	return request.success(function (response, textStatus, jqXHR){
+		var xmlDoc = $(response);
+		console.log("This GET ajax responsed - " + obj.name);
+		var msgElem  = xmlDoc.find("#" + obj.findID);
+		var checked = "";
+		obj.curValue = false;
+		if (msgElem[0].checked === true) {
+			obj.curValue = true;
+			checked = "checked";
 		}
-	}
+		$("#" + obj.setDivID).html("<input type=\"checkbox\" id=\"" + obj.setInputID + "\" value=\"set\" " + checked + "> <label for=\"" + obj.setInputID + "\"> " + obj.setLabel + "</label> ");
+	});
 }
 
 function getOptionSetting(obj) {	
 	$("#" + obj.setDivID).html("");
 	
-	var xmlhttp = new XMLHttpRequest();
-	//var csrfToken = document.getElementById("csrfToken").value;
 	var params = "csrfToken="+csrfToken;
-	xmlhttp.open("GET", obj.getUrl, true);
-	xmlhttp.withCredentials = true;
-	xmlhttp.setRequestHeader("content-type", "application/x-www-form-urlencoded");
-	xmlhttp.send(params);
+	var request = $.ajax({
+		url: obj.getUrl,
+		type: "GET",
+		dataType: "HTML",
+		data: params
+	});
 	
-	xmlhttp.onreadystatechange = function() {
-		if (xmlhttp.readyState == 4) {
-			var xmlDoc = $(xmlhttp.responseText);
-			var nodes  = xmlDoc.find("#"+obj.findID)[0].childNodes;
-			var html = "<label for=\"" + obj.setDivID + "\"> " + obj.setLabel + "</label> <br /> <ul>";
-			for (i=1; i<nodes.length; i++) {
-				var checked = "";
-				if (nodes[i].getAttribute("selected") == "") {
-					checked = " checked ";
-					obj.curValue = nodes[i].value;
-				}
-				html += "<li> <input type=\"radio\" id=\"" + obj.setInputID + "\" value=\"" + nodes[i].value + "\"  name=\"" + obj.setInputID + "\" " + checked + " /> <label for=\"" + obj.setInputID + "\"> " + nodes[i].text + "</label> </li> \n";
+	return request.success(function (response, textStatus, jqXHR){
+		var xmlDoc = $(response);
+		console.log("This GET ajax responsed - " + obj.name);
+		var nodes  = xmlDoc.find("#"+obj.findID)[0].childNodes;
+		var html = "<label for=\"" + obj.setDivID + "\"> " + obj.setLabel + "</label> <br /> <ul>";
+		for (i=1; i<nodes.length; i++) {
+			var checked = "";
+			if (nodes[i].getAttribute("selected") == "") {
+				checked = " checked ";
+				obj.curValue = nodes[i].value;
 			}
-			html += "</ul>";
-			$("#"+obj.setDivID).html(html);
+			html += "<li> <input type=\"radio\" id=\"" + obj.setInputID + "\" value=\"" + nodes[i].value + "\"  name=\"" + obj.setInputID + "\" " + checked + " /> <label for=\"" + obj.setInputID + "\"> " + nodes[i].text + "</label> </li> \n";
 		}
-	}
+		html += "</ul>";
+		$("#"+obj.setDivID).html(html);
+	});
 }
 
 function getAllSettings() {
@@ -205,7 +203,7 @@ function setAllSettings(defaultFlag) {
 			$("#div-home-fix-message")[0].style.visibility = "hidden";
 		} else {
 			localStorage['lastRecommendFlag'] = false;
-			$("#div-customize-message").html("<div class='alert alert-success'> Your customized privacy settings were updated! </div>");
+			$("#div-customize-message").html("<div class='alert'> Your customized privacy settings were updated! </div>");
 			$("#div-home-message").html("<div class='alert'> Your customized settings were set on " + lastSetTime + " </div>");
 			$("#div-home-fix-message")[0].style.visibility = "visible";
 		}
@@ -237,17 +235,19 @@ function mainFunction() {
 	console.log("--- Binding the function to buttons now");
 	
 	$("#btn-get-all-settings").click(getAllSettings);
-	//$("#btn-get-all-settings").click();
 	
 	$("#btn-recommend-all-settings").click(recommendSettings);
 	$("#btn-recommend-all-settings")[0].style.visibility = "hidden";	
-	//$("#btn-recommend-all-settings").click();
 	
 	$("#btn-set-all-settings").click(setAllSettings);
 	$("#btn-set-all-settings")[0].style.visibility = "hidden";
 	
 	$("#btn-delete-local-storage").click(deleteLocalStorage);
-	$("#btn-set-recommend-settings").click(function () {setAllSettings(true);});
+	
+	$("#btn-set-recommend-settings").click(function () {
+		setAllSettings(true);
+		setTimeout(function () { getAllSettings(); }, 800);
+	});
 	
 	if (!firstRun) {
 		// Open the options page if this is the first run
@@ -257,7 +257,6 @@ function mainFunction() {
 		setTimeout(function () {
 			if (csrfToken !== "") {
 				console.log("--- .5 seconds over, sent settings with recommended values");
-				//$("#btn-set-all-settings").click();	
 				setAllSettings(true);
 			}
 		}, 500);
@@ -291,24 +290,8 @@ function social(d, s, id) {
 	if (!d.getElementById(id)) {
 		js = d.createElement(s);
 		js.id = id;
-		if (id.match(/twitter/g) !== null) {
-			js.src = "https://platform.twitter.com/widgets.js";
-		} else if (id.match(/facebook/g) !== null) {
-			js.src = "https://connect.facebook.net/en_US/all.js#xfbml=1&appId=246371008742609";
-		}
+		js.src = "https://platform.twitter.com/widgets.js";
 		fjs.parentNode.insertBefore(js, fjs);
 	}
 };
 social(document, "script", "twitter-wjs");
-social(document, 'script', 'facebook-jssdk');
-
-//Facebook javascript
-/*
-(function (d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s);
-    js.id = id;
-    js.src = "https://connect.facebook.net/en_US/all.js#xfbml=1&appId=246371008742609";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk')); */
