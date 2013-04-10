@@ -1,7 +1,8 @@
 #main {
-	width: 500px;
-	height: 900px;
 	margin-left: 10px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	width: 500px;
 }
 
 body {
@@ -9,8 +10,6 @@ body {
   font-size: 75%;
   cursor: default;
   margin: 0px;
-  width: 510px;
-  height: 910px;
 }
 a {
   border: none;
