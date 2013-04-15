@@ -18,7 +18,18 @@ function getPageInfo(callback) {
     chrome.tabs.executeScript(null, { file: "contentscript.js" }); 
 }; 
 
-chrome.extension.onRequest.addListener(function(request) {
-	var callback = callbacks.shift();
-	callback(request); 
+
+chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+	if (request.method == "getLocalStorage") {
+		var arr = request.key;
+		for (var i=0; i<arr.length; i++) {
+			arr[i] = localStorage[arr[i]];
+		}
+		sendResponse({data: arr});
+		console.log("background call listener : " + request.key + " : : " + localStorage[request.key]);
+	} else if (request.method == "setLocalStorage"){
+		localStorage[request.key] = request.value;
+	} else {
+		sendResponse({}); // snub them.
+	}
 });

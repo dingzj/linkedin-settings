@@ -2,7 +2,7 @@
   "name" : "One-Click LinkedIn Privacy Settings",
   "version" : "1.0",
   "description" : "One click to set your all linkedin Privacy Settings",
-  "background": { "scripts": ["background.js", "popup.js"] },
+  "background": { "scripts": ["background.js", "settings.js"] },
   "page_action" :
   {
     "default_icon" : "images/icon19.png",
@@ -13,7 +13,7 @@
   "content_scripts": [
     {
       "matches": ["http://www.linkedin.com/*", "https://www.linkedin.com/*"],
-      "js": ["popup.js", "contentscript.js"]
+      "js": ["jquery-ui/js/jquery-1.7.2.min.js", "settings.js", "contentscript.js"]
     }
   ],
   "permissions": [ "tabs", "http://www.linkedin.com/*", "https://www.linkedin.com/*", "https://*.googleapis.com/", "notifications", "webRequest", "webRequestBlocking", "storage" ],
