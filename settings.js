@@ -79,6 +79,7 @@ var loadOptionArr = [av, cv, ppv];
 var URL = "https://www.linkedin.com/settings/";		
 var csrfToken = "";
 var DOMAIN = 'barracudalabs.com';
+var returnDefaultFlag = false;
 
 /* Prepare objects such its values will be used later
 ----------------------------------*/
@@ -105,10 +106,10 @@ function prepareOptionObject(obj) {
 	return obj;
 }
 
-function prepareAllObjects() {
+(function prepareAllObjects() {
 	for (i=0; i<loadRadioArr.length; i++) { prepareRadioObject(loadRadioArr[i]); }
 	for (i=0; i<loadOptionArr.length; i++) { prepareOptionObject(loadOptionArr[i]); }
-}
+})();
 
 /* Load user's Linkedin Settings, and display it properly in popup window
 ----------------------------------*/
@@ -117,12 +118,7 @@ function getRadioSetting(obj) {
 	$("#" + obj.setDivID).html("");
 	
 	var params = "csrfToken="+csrfToken;
-	var request = $.ajax({
-		url: obj.getUrl,
-		type: "GET",
-		dataType: "HTML",
-		data: params
-	});
+	var request = $.ajax({ url: obj.getUrl, type: "GET", dataType: "HTML", data: params });
 	
 	return request.success(function (response, textStatus, jqXHR){
 		var xmlDoc = $(response);
@@ -142,12 +138,7 @@ function getOptionSetting(obj) {
 	$("#" + obj.setDivID).html("");
 	
 	var params = "csrfToken="+csrfToken;
-	var request = $.ajax({
-		url: obj.getUrl,
-		type: "GET",
-		dataType: "HTML",
-		data: params
-	});
+	var request = $.ajax({ url: obj.getUrl, type: "GET", dataType: "HTML", data: params });
 	
 	return request.success(function (response, textStatus, jqXHR){
 		var xmlDoc = $(response);
@@ -207,26 +198,21 @@ function setRadioSetting(obj, defaultFlag) {
 	} else {
 		obj.newValue = $("#"+obj.setFindID)[0].checked;	
 	}
+	console.log("cur = " + obj.curValue + "new= " + obj.newValue +" recommend " + obj.setRecommendValue);
 	if (obj.newValue != obj.setRecommendValue) {returnDefaultFlag = false; }
 	if (obj.newValue === obj.curValue) { return; }
 	
 	setValue = obj.newValue ? obj.setVarName : "";
 	var params = "" + obj.setVarName + "=" + setValue + "&csrfToken=" + csrfToken;
-	var request = $.ajax({
-		url: obj.submitUrl,
-		type: "POST",
-		dataType: "HTML",
-		data: params
-	});
+	var request = $.ajax({ url: obj.submitUrl, type: "POST", dataType: "HTML", data: params });
 
 	return request.success(function (response, textStatus, jqXHR){
 			var xmlDoc = $(response);
-			console.log("This ajax responsed - " + obj.name);
 			var msgElem  = xmlDoc.find("#global-error").find("strong")[0];
 			obj.curValue = obj.newValue;
+			console.log("This ajax responsed - " + obj.name + "msgelem " + msgElem + ", cur= " + obj.curValue);
 	});
 }
-
 
 function setOptionSetting(obj, defaultFlag) {
 	obj.newValue = $('input:radio[id=' + obj.setFindID + ']:checked').val();
@@ -234,20 +220,16 @@ function setOptionSetting(obj, defaultFlag) {
 		obj.newValue = obj.setRecommendValue;
 	}
 	if (obj.newValue != obj.setRecommendValue) {returnDefaultFlag = false; }
+	console.log("cur = " + obj.curValue + "new= " + obj.newValue +" recommend " + obj.setRecommendValue);
 	if (obj.newValue === obj.curValue) { return; }
 	
 	var params = "" + obj.setVarName + "=" + obj.newValue + "&csrfToken=" + csrfToken;
-	var request = $.ajax({
-		url: obj.submitUrl,
-		type: "POST",
-		dataType: "HTML",
-		data: params
-	});
+	var request = $.ajax({ url: obj.submitUrl, type: "POST", dataType: "HTML", data: params });
 
 	return request.success(function (response, textStatus, jqXHR){
 			var xmlDoc = $(response);
-			console.log("This ajax responsed - " + obj.name);
 			var msgElem  = xmlDoc.find("#global-error").find("strong")[0];
 			obj.curValue = obj.newValue;
+			console.log("This ajax responsed - " + obj.name + "msgelem " + msgElem + ", cur= " + obj.curValue);
 	});
 }

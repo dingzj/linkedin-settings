@@ -3,24 +3,14 @@
  * source code is governed by a BSD-style license that can be found in the
  * LICENSE file.
  */
-
-$(".top-nav .wrapper").append("<div class='account' id='injectid'>  </div>");
-
-// Object to hold information about the current page
-
-var pageInfo = {
-    "title": document.title,
-    "url": window.location.href,
-		"csrfToken": document.getElementById("nav-utility-auth").childNodes[0].href.split(/[=&]/)[3]
-};
-// Send the information back to the extension
-//chrome.extension.sendRequest(pageInfo);
-var setLocalStorage = function (key, value) {
+console.log("content script first line now " + new Date());
+var setLocalStorage = function(key, value) {
 	chrome.extension.sendRequest({method: "setLocalStorage", key: key, value: value}, function(response) { });
 };
 
-var setLocalAndSettings = function (defaultFlag) {
-	$("#injectid").html("<span class='alert alert-success'>We are fixing your settings now, please wait...</div>");
+var setLocalAndSettings = function(defaultFlag) {
+	$("#injectid").html("<div class='alert warning'>We are fixing your settings now, please wait...</div>");
+	csrfToken = document.getElementById("nav-utility-auth").childNodes[0].href.split(/[=&]/)[3];
 	var deferreds = [];
 	returnDefaultFlag = true;
 	for (i=0; i<loadRadioArr.length; i++) { 
@@ -31,19 +21,19 @@ var setLocalAndSettings = function (defaultFlag) {
 	}
 	lastSetTime = new Date().toString().replace(/ GMT.*$/, "");
 	setLocalStorage('lastSetTime', lastSetTime);
-	
+
 	$.when(deferreds).done(function() {
 		if (returnDefaultFlag == true) {
 			setLocalStorage('lastRecommendFlag', true);
-			$("#injectid").html("<span class='alert alert-success'><strong>Cheers!</strong> Your privacy settings were fixed now!</div>");
+			$("#injectid").html("<div class='alert success'><p><strong>Well done.</strong>Your privacy settings are Good. </p></div>");
 		} else {
 			setLocalStorage('lastRecommendFlag', false);
-			$("#injectid").html("<span class='alert'> Your customized privacy settings were updated! </div>");
+			$("#injectid").html("<div class='alert warning'><p>You privacy settings may have problems. <a id='fixithref' href='#'> Fix it. </a> </p> </div>");
 		}
 	});
-}
+};
 
-chrome.extension.sendRequest({method: "getLocalStorage", key: ["isFirstRun", "lastSetTime", "lastRecommendFlag"]}, function(response) {
+var responseFunction = function(response) {
 	console.log("content script response: " + response.data);
 	var isFirstRun = (response.data[0] == undefined);
 	var lastSetTime = response.data[1];
@@ -53,20 +43,60 @@ chrome.extension.sendRequest({method: "getLocalStorage", key: ["isFirstRun", "la
 		// Open the options page if this is the first run
 		setLocalStorage('isFirstRun', 'notFirstRun');
 		console.log("--- contentscript First Time RUN: will send settings with recommended values");
-		$("#injectid").html("<span>Checking your Linkedin Settings now...</span>");
+		$("#injectid").html("<div class='alert warning'>We are checking your settings now, please wait...</div>");
 		setTimeout(function () {
 			if (pageInfo.csrfToken !== "") {
-				console.log("--- contentscript  .5 seconds over, sent settings with recommended values");
+				console.log("--- contentscript  1 seconds over, sent settings with recommended values");
 				setLocalAndSettings(true);
 			}
-		}, 5000);
+		}, 1000);
 	};
 	if ( lastSetTime != null ) {
 		if (lastRecommendFlag == 'true') {
-			$("#injectid").html("<span class='alert alert-success'><strong>Well Done.</strong> Your settings was fixed on " + lastSetTime + "</span>");
+			$("#injectid").html("<div class='alert success'><p><strong>Well done.</strong>Your privacy settings are Good.</p> </div>");
 		} else {
-			$("#injectid").html("<span class='alert'> Your customized settings were set on " + lastSetTime + " </span>");
-			$("#injectid").append("<br /><span class='alert'> Fix your settings with our recommendation <input type='button' id='btn-set-recommend-settings' name='set-all-setting' value='Fix It'> </span>");
+			$("#injectid").html("<div class='alert warning'><p>You privacy settings may have problems. <a id='fixithref' href='#'> Fix it. </a> </p> </div>");
+			$('#fixithref').click(function (e) {setLocalAndSettings(true);});
 		}
 	};
-});
+};
+
+function userChangedSettingOnWeb(){
+	$(this).unbind('DOMSubtreeModified');
+	setTimeout(function(){
+		if ($('#global-error p strong').text().indexOf("have successfully updated") > 1 ) {
+			console.log(" User changed settings on Web, your own risk : " + $('#global-error p strong'));
+			$("#injectid").html("<div class='alert warning'><p>You changed settings at own risk!</p></div>");
+			setLocalStorage('lastRecommendFlag', false);
+			chrome.extension.sendRequest({method: "getLocalStorage", key: keys}, responseFunction);
+		}
+		$('#global-error').bind('DOMSubtreeModified',userChangedSettingOnWeb);
+	}, 1000);
+};
+
+//after document-load
+$('#global-error').bind('DOMSubtreeModified', userChangedSettingOnWeb);
+
+//$("#global-error").append("<div id='injectid'>  </div>");
+$(".top-nav .wrapper").append("<div id='injectid'>  </div>");
+
+var pageInfo = {
+    "title": document.title,
+    "url": window.location.href,
+		"csrfToken": document.getElementById("nav-utility-auth").childNodes[0].href.split(/[=&]/)[3]
+};
+var keys = ["isFirstRun", "lastSetTime", "lastRecommendFlag"];
+
+chrome.runtime.onMessage.addListener(
+	function(request, sender, sendResponse) {
+		if (request.data == "getPageInfo")
+			sendResponse({data: pageInfo});
+		else if (request.data == "updatePageMsg") {
+			chrome.extension.sendRequest({method: "getLocalStorage", key: keys}, responseFunction);
+		}
+	}
+);
+
+chrome.extension.sendRequest({method: "sentPageInfo", data: pageInfo}, function(response) { });
+
+chrome.extension.sendRequest({method: "getLocalStorage", key: keys}, responseFunction);
