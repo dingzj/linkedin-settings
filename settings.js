@@ -74,7 +74,23 @@ var ppv = {
 	"setRecommendValue": "evr"
 };
 
-var loadRadioArr = [ab, bm, la, ri, pim, pih];
+var ds = {
+	"name": "data-sharing",
+	"findID":	"dataSharingParam-dataSharingParam-dataSharing",
+	"setLabel": "Share my data with third party applications",
+	"setVarName": "dataSharingParam",
+	"setRecommendValue": false
+};
+
+var opm = {
+	"name": "offsite-privacy-management",
+	"findID":	"offsitePrivacyManagementParam-offsitePrivacyManagementParam-offsitePrivacyManagement",
+	"setLabel": "Allow LinkedIn to receive information about my visited LinkedIn plugins pages",
+	"setVarName": "offsitePrivacyManagementParam",
+	"setRecommendValue": false
+};
+
+var loadRadioArr = [ab, bm, la, ri, pim, pih, ds, opm];
 var loadOptionArr = [av, cv, ppv];
 var URL = "https://www.linkedin.com/settings/";		
 var csrfToken = "";

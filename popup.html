@@ -31,6 +31,12 @@
 
         <div id="div-all-settings" class="tab-pane">
           <div id="div-customize-message"></div>
+          <div id="div-setting-buttons">
+            <input type="button" id="btn-get-all-settings" name="get-all-settings" value="Load Settings">
+            <input type="button" id="btn-recommend-all-settings" name="set-all-settings" value="Recommend Settings">
+            <input type="button" id="btn-set-all-settings" name="set-all-settings" value="Submit Changes">
+            <input type="button" id="btn-delete-local-storage" name="Delete Local Storages" value="Delete Storage" style="display:none">
+          </div>
           <fieldset>
             <legend>Profile Settings: </legend>
               <div id="div-activity-broadcasts"></div>
@@ -38,6 +44,11 @@
               <br />
               <div id="div-activity-visibility"></div>
               <div id="div-connection-visibility"></div>
+          </fieldset>
+          <fieldset>
+            <legend>Privacy Controls: </legend>
+              <div id="div-data-sharing"></div>
+              <div id="div-offsite-privacy-management"></div>
           </fieldset>
           <fieldset>
             <legend>Email Settings: </legend>
@@ -50,27 +61,9 @@
             <legend>Account Settings: </legend>
               <div id="div-profile-photo-visibility"></div>
           </fieldset>
-          <div id="div-setting-buttons">
-            <input type="button" id="btn-get-all-settings" name="get-all-settings" value="Load Settings">
-            <input type="button" id="btn-recommend-all-settings" name="set-all-settings" value="Recommend Settings">
-            <input type="button" id="btn-set-all-settings" name="set-all-settings" value="Submit Changes">
-            <input type="button" id="btn-delete-local-storage" name="Delete Local Storages" value="Delete Storage" style="display:show">
-          </div>
         </div>           
       </div>
-      
-
-
-    <div id="div-set-global-level" style="display:none">
-      <fieldset>
-        <legend>Select your privacy Level:</legend>
-        <input type="radio" name="global-level" value="High">High<br>
-        <input type="radio" name="global-level" value="Middle" checked>Middle(Recommended)<br>
-        <input type="radio" name="global-level" value="Low">Low (Risky)<br>
-        <input type="button" id="btn-set-global-level" name="set-global-submit" value="Submit">
-      </fieldset>
-    </div>
-    
+          
     <div id="debug-form"  style="display:none">
       <fieldset>
         <legend> Debugging information </legend>

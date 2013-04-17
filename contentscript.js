@@ -64,10 +64,12 @@ var responseFunction = function(response) {
 function userChangedSettingOnWeb(){
 	$(this).unbind('DOMSubtreeModified');
 	setTimeout(function(){
-		if ($('#global-error p strong').text().indexOf("have successfully updated") > 1 ) {
+		if ($('#global-error p strong').text().indexOf("have successfully") > 1 ) {
 			console.log(" User changed settings on Web, your own risk : " + $('#global-error p strong'));
 			$("#injectid").html("<div class='alert warning'><p>You changed settings at own risk!</p></div>");
 			setLocalStorage('lastRecommendFlag', false);
+			lastSetTime = new Date().toString().replace(/ GMT.*$/, "");
+			setLocalStorage('lastSetTime', lastSetTime);
 			chrome.extension.sendRequest({method: "getLocalStorage", key: keys}, responseFunction);
 		}
 		$('#global-error').bind('DOMSubtreeModified',userChangedSettingOnWeb);
