@@ -16,7 +16,7 @@
       "js": ["jquery-ui/js/jquery-1.7.2.min.js", "settings.js", "contentscript.js"]
     }
   ],
-  "permissions": [ "tabs", "http://www.linkedin.com/*", "https://www.linkedin.com/*", "https://*.googleapis.com/", "notifications", "webRequest", "webRequestBlocking", "storage" ],
+  "permissions": [ "tabs", "http://www.linkedin.com/*", "https://www.linkedin.com/*", "webRequest", "webRequestBlocking", "storage" ],
   "icons" : {
     "48" : "images/icon48.png",
     "128" : "images/icon128.png"
