@@ -92,7 +92,7 @@ var opm = {
 
 var loadRadioArr = [ab, bm, la, ri, pim, pih, ds, opm];
 var loadOptionArr = [av, cv, ppv];
-var URL = "https://www.linkedin.com/settings/";		
+var URL = "https://www.linkedin.com/settings/";
 var csrfToken = "";
 var DOMAIN = 'barracudalabs.com';
 var returnDefaultFlag = false;
@@ -160,7 +160,7 @@ function getOptionSetting(obj) {
 		var xmlDoc = $(response);
 		console.log("This GET ajax responsed - " + obj.name);
 		var nodes  = xmlDoc.find("#"+obj.findID)[0].childNodes;
-		var html = "<label for=\"" + obj.setDivID + "\"> " + obj.setLabel + "</label> <br /> <ul>";
+		var html = "<label for=\"" + obj.setDivID + "\"> " + obj.setLabel + "</label> \n <ul>";
 		for (i=1; i<nodes.length; i++) {
 			var checked = "";
 			if (nodes[i].getAttribute("selected") == "") {
@@ -169,7 +169,7 @@ function getOptionSetting(obj) {
 			}
 			html += "<li> <input type=\"radio\" id=\"" + obj.setInputID + "\" value=\"" + nodes[i].value + "\"  name=\"" + obj.setInputID + "\" " + checked + " /> <label for=\"" + obj.setInputID + "\"> " + nodes[i].text + "</label> </li> \n";
 		}
-		html += "</ul>";
+		html += "</ul> \n";
 		$("#"+obj.setDivID).html(html);
 	});
 }
@@ -236,7 +236,7 @@ function setOptionSetting(obj, defaultFlag) {
 		obj.newValue = obj.setRecommendValue;
 	}
 	if (obj.newValue != obj.setRecommendValue) {returnDefaultFlag = false; }
-	console.log("cur = " + obj.curValue + "new= " + obj.newValue +" recommend " + obj.setRecommendValue);
+	console.log("cur = " + obj.curValue + ", new= " + obj.newValue +", recommend " + obj.setRecommendValue);
 	if (obj.newValue === obj.curValue) { return; }
 	
 	var params = "" + obj.setVarName + "=" + obj.newValue + "&csrfToken=" + csrfToken;

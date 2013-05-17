@@ -4,11 +4,12 @@
  * LICENSE file.
  */
 console.log("content script first line now " + new Date());
-var setLocalStorage = function(key, value) {
+
+function setLocalStorage(key, value) {
 	chrome.extension.sendRequest({method: "setLocalStorage", key: key, value: value}, function(response) { });
 };
 
-var setLocalAndSettings = function(defaultFlag) {
+function setLocalAndSettings(defaultFlag) {
 	$("#injectid").html("<div class='alert warning'>We are fixing your settings now, please wait...</div>");
 	csrfToken = document.getElementById("nav-utility-auth").childNodes[0].href.split(/[=&]/)[3];
 	var deferreds = [];
@@ -33,7 +34,7 @@ var setLocalAndSettings = function(defaultFlag) {
 	});
 };
 
-var responseFunction = function(response) {
+function responseFunction(response) {
 	console.log("content script response: " + response.data);
 	var isFirstRun = (response.data[0] == undefined);
 	var lastSetTime = response.data[1];
@@ -53,7 +54,7 @@ var responseFunction = function(response) {
 	};
 	if ( lastSetTime != null ) {
 		if (lastRecommendFlag == 'true') {
-			$("#injectid").html("<div class='alert success'><p><strong>Well done.</strong>Your privacy settings are Good.</p> </div>");
+			$("#injectid").html("<div class='alert success'><p><strong>Well done.</strong>Your privacy settings are Good.</p>  </div>");
 		} else {
 			$("#injectid").html("<div class='alert warning'><p>You privacy settings may have problems. <a id='fixithref' href='#'> Fix it. </a> </p> </div>");
 			$('#fixithref').click(function (e) {setLocalAndSettings(true);});
@@ -76,10 +77,16 @@ function userChangedSettingOnWeb(){
 	}, 1000);
 };
 
+function contentListener(request, sender, sendResponse) {
+	if (request.data == "getPageInfo")
+		sendResponse({data: pageInfo});
+	else if (request.data == "updatePageMsg") {
+		chrome.extension.sendRequest({method: "getLocalStorage", key: keys}, responseFunction);
+	}
+}
+
 //after document-load
 $('#global-error').bind('DOMSubtreeModified', userChangedSettingOnWeb);
-
-//$("#global-error").append("<div id='injectid'>  </div>");
 $(".top-nav .wrapper").append("<div id='injectid'>  </div>");
 
 var pageInfo = {
@@ -89,16 +96,5 @@ var pageInfo = {
 };
 var keys = ["isFirstRun", "lastSetTime", "lastRecommendFlag"];
 
-chrome.runtime.onMessage.addListener(
-	function(request, sender, sendResponse) {
-		if (request.data == "getPageInfo")
-			sendResponse({data: pageInfo});
-		else if (request.data == "updatePageMsg") {
-			chrome.extension.sendRequest({method: "getLocalStorage", key: keys}, responseFunction);
-		}
-	}
-);
-
-chrome.extension.sendRequest({method: "sentPageInfo", data: pageInfo}, function(response) { });
-
+chrome.runtime.onMessage.addListener(contentListener);
 chrome.extension.sendRequest({method: "getLocalStorage", key: keys}, responseFunction);

@@ -11,6 +11,13 @@ body {
   cursor: default;
   margin: 0px;
 }
+fieldset {
+	margin-top: 10px;
+}
+
+legend {
+	font-weight: 900;
+}
 a {
   border: none;
   margin: 1px;
@@ -23,12 +30,16 @@ a:hover,
 a:focus {
   outline: none;
 }
-ul,
-ol {
-  padding: 0;
+ul, ol {
+	padding: 0;
+	margin: 0px 0px 2px 25px;
 }
 li {
   list-style-type: none;
+}
+ul > li {
+	display: inline-block;
+	margin: 1px 6px 1px 1px;
 }
 dl,
 dt,

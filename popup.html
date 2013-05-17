@@ -2,14 +2,13 @@
 <html>
   <head>
     <title>Popup</title>
-    <link type="text/css" href="jquery-ui/css/smoothness/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css">
     <link href="popup.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="jquery-ui/js/jquery-1.7.2.min.js"></script>
-
+    <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
     <script type="text/javascript" src="settings.js"></script>
     <script type="text/javascript" src="popup.js"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+
   </head>
   <body id="main">
       <ul class="nav nav-tabs" id="myTab">
@@ -31,7 +30,7 @@
 
         <div id="div-all-settings" class="tab-pane">
           <div id="div-customize-message"></div>
-          <div id="div-setting-buttons">
+          <div id="div-setting-buttons"style="margin-top: 6px;">
             <input type="button" id="btn-get-all-settings" name="get-all-settings" value="Load Settings">
             <input type="button" id="btn-recommend-all-settings" name="set-all-settings" value="Recommend Settings">
             <input type="button" id="btn-set-all-settings" name="set-all-settings" value="Submit Changes">
@@ -41,7 +40,6 @@
             <legend>Profile Settings: </legend>
               <div id="div-activity-broadcasts"></div>
               <div id="div-browse-map"></div>
-              <br />
               <div id="div-activity-visibility"></div>
               <div id="div-connection-visibility"></div>
           </fieldset>
@@ -68,7 +66,7 @@
       <fieldset>
         <legend> Debugging information </legend>
       	<p><label for="csrfToken">csrfToken</label><br />
-      	  <input type="text" id="csrfToken" name="csrfToken" size="50" value="" /></p>
+      	  <input type="text" id="csrfToken" name="csrfToken" size="100" value="" /></p>
       	<p><input id="save" type="submit" value="Save Bookmark" /></p>
       </fieldset>
     </div>
