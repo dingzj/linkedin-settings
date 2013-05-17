@@ -5,7 +5,7 @@
   "background": { "scripts": ["background.js", "settings.js"] },
   "page_action" :
   {
-    "default_icon" : "images/icon19.png",
+    "default_icon" : "images/icon16.png",
     "default_title" : "One click to set your all LinkedIn Privacy Settings",
     "default_popup": "popup.html"
   },
