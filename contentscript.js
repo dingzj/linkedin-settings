@@ -10,7 +10,7 @@ function setLocalStorage(key, value) {
 };
 
 function setLocalAndSettings(defaultFlag) {
-	$("#injectid").html("<div class='alert warning'>We are fixing your settings now, please wait...</div>");
+	$("#injectid").html( LIHomeUpdating );
 	csrfToken = document.getElementById("nav-utility-auth").childNodes[0].href.split(/[=&]/)[3];
 	var deferreds = [];
 	returnDefaultFlag = true;
@@ -26,10 +26,10 @@ function setLocalAndSettings(defaultFlag) {
 	$.when(deferreds).done(function() {
 		if (returnDefaultFlag == true) {
 			setLocalStorage('lastRecommendFlag', true);
-			$("#injectid").html("<div class='alert success'><p><strong>Well done.</strong>Your privacy settings are Good. </p></div>");
+			$("#injectid").html( LIHomeSuccess );
 		} else {
 			setLocalStorage('lastRecommendFlag', false);
-			$("#injectid").html("<div class='alert warning'><p>You privacy settings may have problems. <a id='fixithref' href='#'> Fix it. </a> </p> </div>");
+			$("#injectid").html( LIHomeBad );
 		}
 	});
 };
@@ -44,7 +44,7 @@ function responseFunction(response) {
 		// Open the options page if this is the first run
 		setLocalStorage('isFirstRun', 'notFirstRun');
 		console.log("--- contentscript First Time RUN: will send settings with recommended values");
-		$("#injectid").html("<div class='alert warning'>We are checking your settings now, please wait...</div>");
+		$("#injectid").html( LIHomeFirstCheck );
 		setTimeout(function () {
 			if (pageInfo.csrfToken !== "") {
 				console.log("--- contentscript  1 seconds over, sent settings with recommended values");
@@ -54,9 +54,9 @@ function responseFunction(response) {
 	};
 	if ( lastSetTime != null ) {
 		if (lastRecommendFlag == 'true') {
-			$("#injectid").html("<div class='alert success'><p><strong>Well done.</strong>Your privacy settings are Good.</p>  </div>");
+			$("#injectid").html( LIHomeSuccess );
 		} else {
-			$("#injectid").html("<div class='alert warning'><p>You privacy settings may have problems. <a id='fixithref' href='#'> Fix it. </a> </p> </div>");
+			$("#injectid").html( LIHomeBad );
 			$('#fixithref').click(function (e) {setLocalAndSettings(true);});
 		}
 	};
@@ -67,7 +67,7 @@ function userChangedSettingOnWeb(){
 	setTimeout(function(){
 		if ($('#global-error p strong').text().indexOf("have successfully") > 1 ) {
 			console.log(" User changed settings on Web, your own risk : " + $('#global-error p strong'));
-			$("#injectid").html("<div class='alert warning'><p>You changed settings at own risk!</p></div>");
+			$("#injectid").html( LIHomeAtRisk );
 			setLocalStorage('lastRecommendFlag', false);
 			lastSetTime = new Date().toString().replace(/ GMT.*$/, "");
 			setLocalStorage('lastSetTime', lastSetTime);

@@ -4,7 +4,7 @@ var lastSetTime = localStorage['lastSetTime'];
 var lastRecommendFlag = localStorage['lastRecommendFlag'];
 
 function setAllSettings(defaultFlag) {
-	$("#div-customize-message").html("<div class='alert alert-success'>We are fixing your settings now, please wait...</div>");
+	$("#div-customize-message").html( MsgCustomFirstCheck );
 	var deferreds = [];
 	returnDefaultFlag = true;
 	for (i=0; i<loadRadioArr.length; i++) { 
@@ -19,15 +19,14 @@ function setAllSettings(defaultFlag) {
 	$.when(deferreds).done(function() {
 		if (returnDefaultFlag == true) {
 			localStorage['lastRecommendFlag'] = true;
-			$("#div-customize-message").html("<div class='alert alert-success'><strong>Cheers!</strong> Your privacy settings were fixed now!</div>");
-			$("#div-home-message").html("<div class='alert alert-success'><strong>Well Done!</strong> Your privacy settings are secure.</div>");	
-			//$("#div-home-message").html("<div class='alert alert-success'><strong>Well Done.</strong> Your settings was fixed on " + lastSetTime + "</div>");	
+			$("#div-customize-message").html( MsgCustomSuccess );
+			$("#div-home-message").html(MsgHomeSuccess);	
 			$("#div-home-fix-message").html("");
 		} else {
 			localStorage['lastRecommendFlag'] = false;
-			$("#div-customize-message").html("<div class='alert'> Your customized privacy settings were updated! </div>");
+			$("#div-customize-message").html( MsgCustomUpdate );
 			$("#div-home-message").html("<div class='alert'> Your customized settings were set on " + lastSetTime + " </div>");
-			$("#div-home-fix-message").html("<div class='alert'> Fix your settings with our recommendation <input type='button' id='btn-set-recommend-settings' name='set-all-setting' value='Fix It'> </div>");
+			$("#div-home-fix-message").html( MsgHomeFix );
 			$("#btn-set-recommend-settings").click(function () {
 				setAllSettings(true);
 				setTimeout(function () { getAllSettings(); }, 800);
@@ -76,7 +75,7 @@ function mainFunction() {
 		// Open the options page if this is the first run
 		localStorage['isFirstRun'] = 'notFirstRun';
 		console.log("--- First Time RUN: will send settings with recommended values");
-		$("#div-home-message").html("<div class='alert alert-success'>Checking your Linkedin Settings now...</div>");
+		$("#div-home-message").html( MsgHomeFirstCheck );
 		setTimeout(function () {
 			if (csrfToken !== "") {
 				console.log("--- .5 seconds over, sent settings with recommended values");
@@ -87,12 +86,11 @@ function mainFunction() {
 	
 	if ( lastSetTime != null ) {
 		if (localStorage['lastRecommendFlag'] == 'true') {
-			$("#div-home-message").html("<div class='alert alert-success'><strong>Well Done!</strong> Your privacy settings are secure.</div>");	
-			//$("#div-home-message").html("<div class='alert alert-success'><strong>Well Done.</strong> Your settings was fixed on " + lastSetTime + "</div>");
+			$("#div-home-message").html(MsgHomeSuccess);	
 			$("#div-home-fix-message").html("");
 		} else {
 			$("#div-home-message").html("<div class='alert'> Your customized settings were set on " + lastSetTime + " </div>");
-			$("#div-home-fix-message").html("<div class='alert'> Fix your settings with our recommendation <input type='button' id='btn-set-recommend-settings' name='set-all-setting' value='Fix It'> </div>");
+			$("#div-home-fix-message").html( MsgHomeFix );
 			$("#btn-set-recommend-settings").click(function () {
 				setAllSettings(true);
 				setTimeout(function () { getAllSettings(); }, 800);
