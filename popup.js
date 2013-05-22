@@ -25,7 +25,7 @@ function setAllSettings(defaultFlag) {
 		} else {
 			localStorage['lastRecommendFlag'] = false;
 			$("#div-customize-message").html( MsgCustomUpdate );
-			$("#div-home-message").html("<div class='alert'> Your customized settings were set on " + lastSetTime + " </div>");
+			$("#div-home-message").html( MsgHomeCustom );
 			$("#div-home-fix-message").html( MsgHomeFix );
 			$("#btn-set-recommend-settings").click(function () {
 				setAllSettings(true);
@@ -89,7 +89,7 @@ function mainFunction() {
 			$("#div-home-message").html(MsgHomeSuccess);	
 			$("#div-home-fix-message").html("");
 		} else {
-			$("#div-home-message").html("<div class='alert'> Your customized settings were set on " + lastSetTime + " </div>");
+			$("#div-home-message").html( MsgHomeCustom );
 			$("#div-home-fix-message").html( MsgHomeFix );
 			$("#btn-set-recommend-settings").click(function () {
 				setAllSettings(true);

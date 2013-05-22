@@ -100,13 +100,7 @@ var opm = {
 	"setRecommendValue": false
 };
 
-var loadRadioArr = [ab, bm, la, ri, pim, pih, ds, opm];
-var loadOptionArr = [av, pv, cv, ppv];
-var URL = "https://www.linkedin.com/settings/";
-var csrfToken = "";
-var DOMAIN = 'barracudalabs.com';
-var returnDefaultFlag = false;
-
+/* Messages to be used on LinkedIn Page and Extention popup page */
 var LIHomeFirstCheck = "<div class='alert warning'>We are checking your settings now, please wait...</div>";
 var LIHomeSuccess = "<div class='alert success'><p><strong>Well done.</strong>Your privacy settings are Good. </p></div>";
 var LIHomeUpdating = "<div class='alert warning'>We are fixing your settings now, please wait...</div>";
@@ -115,11 +109,20 @@ var LIHomeAtRisk = "<div class='alert warning'><p>You changed settings at own ri
 
 var MsgHomeFirstCheck = "<div class='alert alert-success'>Checking your Linkedin Settings now...</div>";
 var MsgHomeSuccess = "<div class='alert alert-success'><strong>Well Done!</strong> Your privacy settings are secure.</div>";
+var MsgHomeCustom = "<div class='alert'> Your customized privacy settings were updated, and may have problems.</div>";
 var MsgHomeFix = "<div class='alert'> Fix your settings with our recommendation <input type='button' id='btn-set-recommend-settings' name='set-all-setting' value='Fix It'> </div>";
 
 var MsgCustomFirstCheck = "<div class='alert alert-success'>We are fixing your settings now, please wait...</div>";
-var MsgCustomSuccess = "<div class='alert alert-success'><strong>Cheers!</strong> Your privacy settings were updated now!</div>";
+var MsgCustomSuccess = "<div class='alert alert-success'><strong>Cheers!</strong> Your privacy settings were updated with recommended choices!</div>";
 var MsgCustomUpdate = "<div class='alert'> Your customized privacy settings were updated! </div>";
+
+/* Variables to be used in background.js or contentscript.js */
+var loadRadioArr = [ab, bm, la, ri, pim, pih, ds, opm];
+var loadOptionArr = [av, pv, cv, ppv];
+var URL = "https://www.linkedin.com/settings/";
+var csrfToken = "";
+var DOMAIN = 'barracudalabs.com';
+var returnDefaultFlag = false;
 
 /* Prepare objects such its values will be used later
 ----------------------------------*/
