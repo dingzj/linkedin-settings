@@ -9,7 +9,7 @@ var ab = {
 var bm = {
 	"name": "browse-map",
 	"findID":	"browseMapParam-browseMapParam-browseMap",
-	"setLabel": "Show people viewed your profile also viewed",
+	"setLabel": "Show side box: 'Viewers of your profile also viewed' ",
 	"setVarName": "browseMapParam",
 	"setRecommendValue": false
 };
@@ -22,10 +22,20 @@ var av = {
 	"setRecommendValue": "CONNECTIONS"
 };
 
+var pv = {
+	"name": "edit-picture-info",
+	"getPath": "https://www.linkedin.com/profile/edit-picture-info",
+	"submitPath": "https://www.linkedin.com/profile/edit-picture-visibility",
+	"findID":	"pictureVisibility",
+	"setLabel": "Who can see my profile photo: ",
+	"setVarName": "pictureVisibility",
+	"setRecommendValue": "NETWORK"
+};
+
 var cv = {
 	"name": "connection-visibility",
 	"findID":	"browseConnections-editBrowseConnections",
-	"setLabel": "Who can see your connection: ",
+	"setLabel": "Who can see your connections: ",
 	"setVarName": "browseConnections",
 	"setRecommendValue": "ME"
 };
@@ -33,7 +43,7 @@ var cv = {
 var la = {
 	"name": "li-announcements",
 	"findID":	"liAnnouncementsParam-liAnnouncementsParam-editReceivingMarketing",
-	"setLabel": "Get Linkedin announcement ",
+	"setLabel": "Linkedin announcements",
 	"setVarName": "liAnnouncementsParam",
 	"setRecommendValue": false
 };
@@ -41,7 +51,7 @@ var la = {
 var ri = {
 	"name": "research-invitations",
 	"findID":	"researchInvitationsParam-researchInvitationsParam-editResearchInvitations",
-	"setLabel": "Invitations to participate in research",
+	"setLabel": "invitations to participate in LinkedIn research",
 	"setVarName": "researchInvitationsParam",
 	"setRecommendValue": false
 };
@@ -51,7 +61,7 @@ var pim = {
 	"submitPath": "https://www.linkedin.com/settings/partner-inMail",
 	"setName": "partner-inmail-marketing",
 	"findID":	"marketingPartnerParam-marketingPartnerParam-editPartnerInMail",
-	"setLabel": "Linkedin's Marketing partners may send you information",
+	"setLabel": "information from LinkedIn Marketing Partners",
 	"setVarName": "marketingPartnerParam",
 	"setRecommendValue": false
 };
@@ -61,7 +71,7 @@ var pih = {
 	"submitPath": "https://www.linkedin.com/settings/partner-inMail",
 	"setName": "partner-inmail-hiring",
 	"findID":	"hiringCampaignParam-hiringCampaignParam-editPartnerInMail",
-	"setLabel": "Linkedin's hiring campaign may send you information",
+	"setLabel": "information regarding LinkedIn job opportunities",
 	"setVarName": "hiringCampaignParam",
 	"setRecommendValue": false
 };
@@ -69,7 +79,7 @@ var pih = {
 var ppv = {
 	"name": "profile-photo-visibility",
 	"findID":	"profilePhotosParam-editProfilePhotos",
-	"setLabel": "Select whose photos you would like to see",
+	"setLabel": "Select whose profile photos you would like to see",
 	"setVarName": "profilePhotosParam",
 	"setRecommendValue": "evr"
 };
@@ -77,7 +87,7 @@ var ppv = {
 var ds = {
 	"name": "data-sharing",
 	"findID":	"dataSharingParam-dataSharingParam-dataSharing",
-	"setLabel": "Share my data with third party applications",
+	"setLabel": "Share my data with third-party applications",
 	"setVarName": "dataSharingParam",
 	"setRecommendValue": false
 };
@@ -85,13 +95,13 @@ var ds = {
 var opm = {
 	"name": "offsite-privacy-management",
 	"findID":	"offsitePrivacyManagementParam-offsitePrivacyManagementParam-offsitePrivacyManagement",
-	"setLabel": "Allow LinkedIn to receive information about my visited LinkedIn plugins pages",
+	"setLabel": "Allow LinkedIn to collect history of visited LinkedIn-plugined websites",
 	"setVarName": "offsitePrivacyManagementParam",
 	"setRecommendValue": false
 };
 
 var loadRadioArr = [ab, bm, la, ri, pim, pih, ds, opm];
-var loadOptionArr = [av, cv, ppv];
+var loadOptionArr = [av, pv, cv, ppv];
 var URL = "https://www.linkedin.com/settings/";
 var csrfToken = "";
 var DOMAIN = 'barracudalabs.com';
@@ -118,7 +128,7 @@ function prepareOptionObject(obj) {
 	obj.getUrl = (obj.getPath == null) ? URL+obj.name : obj.getPath;	
 	// set value part
 	obj.submitUrl = (obj.submitPath == null) ? URL+obj.name+"-submit" : obj.submitPath+"-submit";
-	obj.setFindID = (obj.setName == null) ? "select-"+obj.name : "select-"+obobj.j.setName;
+	obj.setFindID = (obj.setName == null) ? "select-"+obj.name : "select-"+obj.setName;
 	return obj;
 }
 
@@ -159,15 +169,20 @@ function getOptionSetting(obj) {
 	return request.success(function (response, textStatus, jqXHR){
 		var xmlDoc = $(response);
 		console.log("This GET ajax responsed - " + obj.name);
-		var nodes  = xmlDoc.find("#"+obj.findID)[0].childNodes;
+		var nodes  = null;
+		if (xmlDoc.find("#"+obj.findID+" option").length > 0) {
+			nodes = xmlDoc.find("#"+obj.findID+" option");
+		} else if (xmlDoc.find("input:radio[name="+obj.findID+"]").length > 0) {
+			nodes = xmlDoc.find("input:radio[name="+obj.findID+"]");
+		}
 		var html = "<label for=\"" + obj.setDivID + "\"> " + obj.setLabel + "</label> \n <ul>";
-		for (i=1; i<nodes.length; i++) {
+		for (i=0; i<nodes.length; i++) {
 			var checked = "";
-			if (nodes[i].getAttribute("selected") == "") {
+			if (nodes[i].getAttribute("selected") == "" || nodes[i].getAttribute("checked") == "") {
 				checked = " checked ";
 				obj.curValue = nodes[i].value;
 			}
-			html += "<li> <input type=\"radio\" id=\"" + obj.setInputID + "\" value=\"" + nodes[i].value + "\"  name=\"" + obj.setInputID + "\" " + checked + " /> <label for=\"" + obj.setInputID + "\"> " + nodes[i].text + "</label> </li> \n";
+			html += "<li> <input type=\"radio\" id=\"" + obj.setInputID + "\" value=\"" + nodes[i].value + "\"  name=\"" + obj.setInputID + "\" " + checked + " /> <label for=\"" + obj.setInputID + "\"> " + (nodes[i].text || nodes[i].value.toLowerCase()) + "</label> </li> \n";
 		}
 		html += "</ul> \n";
 		$("#"+obj.setDivID).html(html);
@@ -214,7 +229,7 @@ function setRadioSetting(obj, defaultFlag) {
 	} else {
 		obj.newValue = $("#"+obj.setFindID)[0].checked;	
 	}
-	console.log("cur = " + obj.curValue + "new= " + obj.newValue +" recommend " + obj.setRecommendValue);
+	console.log("old = " + obj.curValue + ", new = " + obj.newValue +" recommend " + obj.setRecommendValue);
 	if (obj.newValue != obj.setRecommendValue) {returnDefaultFlag = false; }
 	if (obj.newValue === obj.curValue) { return; }
 	
@@ -236,7 +251,7 @@ function setOptionSetting(obj, defaultFlag) {
 		obj.newValue = obj.setRecommendValue;
 	}
 	if (obj.newValue != obj.setRecommendValue) {returnDefaultFlag = false; }
-	console.log("cur = " + obj.curValue + ", new= " + obj.newValue +", recommend " + obj.setRecommendValue);
+	console.log("old = " + obj.curValue + ", new = " + obj.newValue +", recommend " + obj.setRecommendValue);
 	if (obj.newValue === obj.curValue) { return; }
 	
 	var params = "" + obj.setVarName + "=" + obj.newValue + "&csrfToken=" + csrfToken;

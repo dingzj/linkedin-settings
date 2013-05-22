@@ -20,7 +20,8 @@ function setAllSettings(defaultFlag) {
 		if (returnDefaultFlag == true) {
 			localStorage['lastRecommendFlag'] = true;
 			$("#div-customize-message").html("<div class='alert alert-success'><strong>Cheers!</strong> Your privacy settings were fixed now!</div>");
-			$("#div-home-message").html("<div class='alert alert-success'><strong>Well Done.</strong> Your settings was fixed on " + lastSetTime + "</div>");	
+			$("#div-home-message").html("<div class='alert alert-success'><strong>Well Done!</strong> Your privacy settings are secure.</div>");	
+			//$("#div-home-message").html("<div class='alert alert-success'><strong>Well Done.</strong> Your settings was fixed on " + lastSetTime + "</div>");	
 			$("#div-home-fix-message").html("");
 		} else {
 			localStorage['lastRecommendFlag'] = false;
@@ -86,7 +87,8 @@ function mainFunction() {
 	
 	if ( lastSetTime != null ) {
 		if (localStorage['lastRecommendFlag'] == 'true') {
-			$("#div-home-message").html("<div class='alert alert-success'><strong>Well Done.</strong> Your settings was fixed on " + lastSetTime + "</div>");
+			$("#div-home-message").html("<div class='alert alert-success'><strong>Well Done!</strong> Your privacy settings are secure.</div>");	
+			//$("#div-home-message").html("<div class='alert alert-success'><strong>Well Done.</strong> Your settings was fixed on " + lastSetTime + "</div>");
 			$("#div-home-fix-message").html("");
 		} else {
 			$("#div-home-message").html("<div class='alert'> Your customized settings were set on " + lastSetTime + " </div>");

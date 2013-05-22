@@ -1,12 +1,12 @@
 {
   "name" : "One-Click LinkedIn Privacy Settings",
-  "version" : "1.0",
-  "description" : "One click to set your all LinkedIn Privacy Settings",
+  "version" : "1.2.2",
+  "description" : "One click to set your LinkedIn Privacy Settings",
   "background": { "scripts": ["background.js", "settings.js"] },
   "page_action" :
   {
     "default_icon" : "images/icon16.png",
-    "default_title" : "One click to set your all LinkedIn Privacy Settings",
+    "default_title" : "One click to set your LinkedIn Privacy Settings",
     "default_popup": "popup.html"
   },
   "content_security_policy": "script-src 'self' https://platform.twitter.com https://connect.facebook.net; object-src 'self'",
