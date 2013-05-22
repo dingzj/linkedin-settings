@@ -1,7 +1,7 @@
 var ab = {
 	"name": "activity-broadcasts",
 	"findID":	"activity-activity-editActivityBroadcasts",
-	"setLabel": "Let people know your activities",
+	"setLabel": "Activity broadcasts (Share your activity updates in your News Feed)",
 	"setVarName": "activity",
 	"setRecommendValue": false
 };
@@ -27,7 +27,7 @@ var pv = {
 	"getPath": "https://www.linkedin.com/profile/edit-picture-info",
 	"submitPath": "https://www.linkedin.com/profile/edit-picture-visibility",
 	"findID":	"pictureVisibility",
-	"setLabel": "Who can see my profile photo: ",
+	"setLabel": "Who can see your profile photo: ",
 	"setVarName": "pictureVisibility",
 	"setRecommendValue": "NETWORK"
 };
@@ -43,7 +43,7 @@ var cv = {
 var la = {
 	"name": "li-announcements",
 	"findID":	"liAnnouncementsParam-liAnnouncementsParam-editReceivingMarketing",
-	"setLabel": "Linkedin announcements",
+	"setLabel": "LinkedIn announcements",
 	"setVarName": "liAnnouncementsParam",
 	"setRecommendValue": false
 };
@@ -95,7 +95,7 @@ var ds = {
 var opm = {
 	"name": "offsite-privacy-management",
 	"findID":	"offsitePrivacyManagementParam-offsitePrivacyManagementParam-offsitePrivacyManagement",
-	"setLabel": "Allow LinkedIn to collect history of visited LinkedIn-plugined websites",
+	"setLabel": "Allow LinkedIn to collect my visited websites which included LinkedIn plugins",
 	"setVarName": "offsitePrivacyManagementParam",
 	"setRecommendValue": false
 };
@@ -190,7 +190,7 @@ function getOptionSetting(obj) {
 		if (xmlDoc.find("#"+obj.findID+" option").length > 0) {
 			nodes = xmlDoc.find("#"+obj.findID+" option");
 		} else if (xmlDoc.find("input:radio[name="+obj.findID+"]").length > 0) {
-			nodes = xmlDoc.find("input:radio[name="+obj.findID+"]");
+			nodes = xmlDoc.find("input:radio[name="+obj.findID+"]").toArray().reverse();
 		}
 		var html = "<label for=\"" + obj.setDivID + "\"> " + obj.setLabel + "</label> \n <ul>";
 		for (i=0; i<nodes.length; i++) {
@@ -199,7 +199,16 @@ function getOptionSetting(obj) {
 				checked = " checked ";
 				obj.curValue = nodes[i].value;
 			}
-			html += "<li> <input type=\"radio\" id=\"" + obj.setInputID + "\" value=\"" + nodes[i].value + "\"  name=\"" + obj.setInputID + "\" " + checked + " /> <label for=\"" + obj.setInputID + "\"> " + (nodes[i].text || nodes[i].value.toLowerCase()) + "</label> </li> \n";
+			displayText = (nodes[i].text || nodes[i].value.toLowerCase());
+			if (displayText.indexOf("connections") == 0) {
+				displayText = "Your " + displayText;
+			} else if (displayText.indexOf("network") == 0) {
+				displayText = "Your " + displayText;
+			}	else if (displayText.indexOf("everyone") == 0) {
+				displayText = "Everyone";
+			}
+			
+			html += "<li> <input type=\"radio\" id=\"" + obj.setInputID + "\" value=\"" + nodes[i].value + "\"  name=\"" + obj.setInputID + "\" " + checked + " /> <label for=\"" + obj.setInputID + "\"> " + displayText + "</label> </li> \n";
 		}
 		html += "</ul> \n";
 		$("#"+obj.setDivID).html(html);
