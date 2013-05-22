@@ -29,7 +29,7 @@ var pv = {
 	"findID":	"pictureVisibility",
 	"setLabel": "Who can see your profile photo: ",
 	"setVarName": "pictureVisibility",
-	"setRecommendValue": "NETWORK"
+	"setRecommendValue": "CONNECTIONS"
 };
 
 var cv = {
