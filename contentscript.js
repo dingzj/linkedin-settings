@@ -90,10 +90,11 @@ function contentListener(request, sender, sendResponse) {
 //after document-load
 $('#global-error').bind('DOMSubtreeModified', userChangedSettingOnWeb);
 //$(".top-nav .wrapper").append("<div id='injectid'>  </div>");
-$("#global-search").css("margin-left", "10px");
+$("#global-search").css("margin-left", "5px");
+$("#global-search").css("margin-right", "0px");
 $("#search-box-container").css("width", "250px");
-$("#main-search-box").css("width", "220px");
-$("#top-header .wrapper").append("<div id='injectid' style='float: right;'>  </div>");
+$("#main-search-box").css("width", "230px");
+$("#top-header .wrapper").append("<div id='injectid' style='height: 20px !important;'>  </div>");
 
 var pageInfo = {
     "title": document.title,
