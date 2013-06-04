@@ -11,7 +11,9 @@ function setLocalStorage(key, value) {
 
 function setLocalAndSettings(defaultFlag) {
 	$("#injectid").html( LIHomeUpdating );
-	csrfToken = document.getElementById("nav-utility-auth").childNodes[0].href.split(/[=&]/)[3];
+	//csrfToken = document.getElementById("nav-utility-auth").childNodes[0].href.split(/[=&]/)[3];
+	//csrfToken = document.getElementsByClassName("self")[0].getElementsByTagName("a")[1].href.split(/[=&]/)[3];
+	csrfToken = $("a:contains(Sign Out)")[0].href.split(/[=&]/)[3];
 	var deferreds = [];
 	returnDefaultFlag = true;
 	for (i=0; i<loadRadioArr.length; i++) { 
@@ -87,12 +89,18 @@ function contentListener(request, sender, sendResponse) {
 
 //after document-load
 $('#global-error').bind('DOMSubtreeModified', userChangedSettingOnWeb);
-$(".top-nav .wrapper").append("<div id='injectid'>  </div>");
+//$(".top-nav .wrapper").append("<div id='injectid'>  </div>");
+$("#global-search").css("margin-left", "10px");
+$("#search-box-container").css("width", "250px");
+$("#main-search-box").css("width", "220px");
+$("#top-header .wrapper").append("<div id='injectid' style='float: right;'>  </div>");
 
 var pageInfo = {
     "title": document.title,
     "url": window.location.href,
-		"csrfToken": document.getElementById("nav-utility-auth").childNodes[0].href.split(/[=&]/)[3]
+		//"csrfToken": document.getElementById("nav-utility-auth").childNodes[0].href.split(/[=&]/)[3]
+		//"csrfToken": document.getElementsByClassName("self")[0].getElementsByTagName("a")[1].href.split(/[=&]/)[3]
+		"csrfToken": $("a:contains(Sign Out)")[0].href.split(/[=&]/)[3]
 };
 var keys = ["isFirstRun", "lastSetTime", "lastRecommendFlag"];
 
