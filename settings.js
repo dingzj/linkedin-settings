@@ -123,6 +123,7 @@ var URL = "https://www.linkedin.com/settings/";
 var csrfToken = "";
 var DOMAIN = 'barracudalabs.com';
 var returnDefaultFlag = false;
+var isDevelopment = false;
 
 /* Prepare objects such its values will be used later
 ----------------------------------*/
@@ -165,7 +166,9 @@ function getRadioSetting(obj) {
 	
 	return request.success(function (response, textStatus, jqXHR){
 		var xmlDoc = $(response);
-		console.log("This GET ajax responsed - " + obj.name);
+		if (isDevelopment) {
+			console.log("This GET ajax responsed - " + obj.name);
+		}
 		var msgElem  = xmlDoc.find("#" + obj.findID);
 		var checked = "";
 		obj.curValue = false;
@@ -185,7 +188,9 @@ function getOptionSetting(obj) {
 	
 	return request.success(function (response, textStatus, jqXHR){
 		var xmlDoc = $(response);
-		console.log("This GET ajax responsed - " + obj.name);
+		if (isDevelopment) {
+			console.log("This GET ajax responsed - " + obj.name);
+		}
 		var nodes  = null;
 		if (xmlDoc.find("#"+obj.findID+" option").length > 0) {
 			nodes = xmlDoc.find("#"+obj.findID+" option");
@@ -255,7 +260,9 @@ function setRadioSetting(obj, defaultFlag) {
 	} else {
 		obj.newValue = $("#"+obj.setFindID)[0].checked;	
 	}
-	console.log("old = " + obj.curValue + ", new = " + obj.newValue +" recommend " + obj.setRecommendValue);
+	if (isDevelopment) {
+		console.log("old = " + obj.curValue + ", new = " + obj.newValue +" recommend " + obj.setRecommendValue);
+	}
 	if (obj.newValue != obj.setRecommendValue) {returnDefaultFlag = false; }
 	if (obj.newValue === obj.curValue) { return; }
 	
@@ -267,7 +274,9 @@ function setRadioSetting(obj, defaultFlag) {
 			var xmlDoc = $(response);
 			var msgElem  = xmlDoc.find("#global-error").find("strong")[0];
 			obj.curValue = obj.newValue;
-			console.log("This ajax responsed - " + obj.name + "msgelem " + msgElem + ", cur= " + obj.curValue);
+			if (isDevelopment) {
+				console.log("This ajax responsed - " + obj.name + "msgelem " + msgElem + ", cur= " + obj.curValue);
+			}
 	});
 }
 
@@ -277,7 +286,9 @@ function setOptionSetting(obj, defaultFlag) {
 		obj.newValue = obj.setRecommendValue;
 	}
 	if (obj.newValue != obj.setRecommendValue) {returnDefaultFlag = false; }
-	console.log("old = " + obj.curValue + ", new = " + obj.newValue +", recommend " + obj.setRecommendValue);
+	if (isDevelopment) {
+		console.log("old = " + obj.curValue + ", new = " + obj.newValue +", recommend " + obj.setRecommendValue);
+	}
 	if (obj.newValue === obj.curValue) { return; }
 	
 	var params = "" + obj.setVarName + "=" + obj.newValue + "&csrfToken=" + csrfToken;
@@ -287,6 +298,8 @@ function setOptionSetting(obj, defaultFlag) {
 			var xmlDoc = $(response);
 			var msgElem  = xmlDoc.find("#global-error").find("strong")[0];
 			obj.curValue = obj.newValue;
-			console.log("This ajax responsed - " + obj.name + "msgelem " + msgElem + ", cur= " + obj.curValue);
+			if (isDevelopment) {
+				console.log("This ajax responsed - " + obj.name + "msgelem " + msgElem + ", cur= " + obj.curValue);
+			}
 	});
 }

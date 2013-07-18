@@ -39,7 +39,9 @@ function setAllSettings(defaultFlag) {
 }
 
 function deleteLocalStorage() {
-	console.log("--- delete localStorage now....");
+	if (isDevelopment) {
+		console.log("--- delete localStorage now....");
+	}
 	localStorage.removeItem('isFirstRun');
 	localStorage.removeItem('lastSetTime');
 	localStorage.removeItem('lastRecommendFlag');
@@ -50,17 +52,21 @@ function deleteLocalStorage() {
 function onPageInfo(o) { 
 	document.getElementById("csrfToken").value = o.csrfToken; 
 	csrfToken = o.csrfToken;
-	console.log("--- onPageInfo csrfToken = " + csrfToken);
+	if (isDevelopment) {
+		console.log("--- onPageInfo csrfToken = " + csrfToken);
+	}
 }
 
 function mainFunction() {
-	console.log("--- Starting main function call ");
-	
-	console.log("--- Object prepared ready, get csrfToken now");
+	if (isDevelopment) {
+		console.log("--- Starting main function call ");
+		console.log("--- Object prepared ready, get csrfToken now");
+	}
   var bg = chrome.extension.getBackgroundPage();
   bg.getPageInfo(onPageInfo);
-	console.log("--- Binding the function to buttons now");
-	
+	if (isDevelopment) {
+		console.log("--- Binding the function to buttons now");
+	}
 	$("#btn-get-all-settings").click(getAllSettings);
 	
 	$("#btn-recommend-all-settings").click(recommendSettings);
@@ -74,11 +80,15 @@ function mainFunction() {
 	if (isFirstRun == true) {
 		// Open the options page if this is the first run
 		localStorage['isFirstRun'] = 'notFirstRun';
-		console.log("--- First Time RUN: will send settings with recommended values");
+		if (isDevelopment) {
+			console.log("--- First Time RUN: will send settings with recommended values");
+		}
 		$("#div-home-message").html( MsgHomeFirstCheck );
 		setTimeout(function () {
 			if (csrfToken !== "") {
-				console.log("--- .5 seconds over, sent settings with recommended values");
+				if (isDevelopment) {
+					console.log("--- .5 seconds over, sent settings with recommended values");
+				}
 				setAllSettings(true);
 			}
 		}, 500);
@@ -109,15 +119,3 @@ function mainFunction() {
 }
 
 window.onload = mainFunction;
-
-// Tweet Javascript
-function social(d, s, id) {
-	var js, fjs = d.getElementsByTagName(s)[0];
-	if (!d.getElementById(id)) {
-		js = d.createElement(s);
-		js.id = id;
-		js.src = "https://platform.twitter.com/widgets.js";
-		fjs.parentNode.insertBefore(js, fjs);
-	}
-};
-social(document, "script", "twitter-wjs");

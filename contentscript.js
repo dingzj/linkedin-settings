@@ -3,7 +3,9 @@
  * source code is governed by a BSD-style license that can be found in the
  * LICENSE file.
  */
-console.log("content script first line now " + new Date());
+if (isDevelopment) {
+	console.log("content script first line now " + new Date());
+}
 
 function setLocalStorage(key, value) {
 	chrome.extension.sendRequest({method: "setLocalStorage", key: key, value: value}, function(response) { });
@@ -11,8 +13,6 @@ function setLocalStorage(key, value) {
 
 function setLocalAndSettings(defaultFlag) {
 	$("#injectid").html( LIHomeUpdating );
-	//csrfToken = document.getElementById("nav-utility-auth").childNodes[0].href.split(/[=&]/)[3];
-	//csrfToken = document.getElementsByClassName("self")[0].getElementsByTagName("a")[1].href.split(/[=&]/)[3];
 	csrfToken = $("a:contains(Sign Out)")[0].href.split(/[=&]/)[3];
 	var deferreds = [];
 	returnDefaultFlag = true;
@@ -37,7 +37,9 @@ function setLocalAndSettings(defaultFlag) {
 };
 
 function responseFunction(response) {
-	console.log("content script response: " + response.data);
+	if (isDevelopment) {
+		console.log("content script response: " + response.data);
+	}
 	var isFirstRun = (response.data[0] == undefined);
 	var lastSetTime = response.data[1];
 	var lastRecommendFlag = response.data[2];
@@ -45,11 +47,15 @@ function responseFunction(response) {
 	if (isFirstRun == true) {
 		// Open the options page if this is the first run
 		setLocalStorage('isFirstRun', 'notFirstRun');
-		console.log("--- contentscript First Time RUN: will send settings with recommended values");
+		if (isDevelopment) {
+			console.log("--- contentscript First Time RUN: will send settings with recommended values");
+		}
 		$("#injectid").html( LIHomeFirstCheck );
 		setTimeout(function () {
 			if (pageInfo.csrfToken !== "") {
-				console.log("--- contentscript  1 seconds over, sent settings with recommended values");
+				if (isDevelopment) {
+					console.log("--- contentscript  1 seconds over, sent settings with recommended values");
+				}
 				setLocalAndSettings(true);
 			}
 		}, 1000);
@@ -68,7 +74,9 @@ function userChangedSettingOnWeb(){
 	$(this).unbind('DOMSubtreeModified');
 	setTimeout(function(){
 		if ($('#global-error p strong').text().indexOf("have successfully") > 1 ) {
-			console.log(" User changed settings on Web, your own risk : " + $('#global-error p strong'));
+			if (isDevelopment) {
+				console.log(" User changed settings on Web, your own risk : " + $('#global-error p strong'));
+			}
 			$("#injectid").html( LIHomeAtRisk );
 			setLocalStorage('lastRecommendFlag', false);
 			lastSetTime = new Date().toString().replace(/ GMT.*$/, "");

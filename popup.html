@@ -1,25 +1,26 @@
 <!doctype html>
 <html>
   <head>
-    <title>Popup</title>
-    <link href="bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <meta name="twitter:widgets:csp" content="on"> 
+    <title>One Click LinkedIn Privacy Settings</title>
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
     <link href="popup.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="jquery-ui/js/jquery-1.7.2.min.js"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <script type="text/javascript" src="js/twitter-widgets.js"></script>
     <script type="text/javascript" src="settings.js"></script>
     <script type="text/javascript" src="popup.js"></script>
-
   </head>
   <body id="main">
       <ul class="nav nav-tabs" id="myTab">
         <li id="about-toolbar"><div style='width: 80px; margin-left: 5px; line-height: 20px;'><b>One-Click Settings</b></div></li>
-        <li id="about-toolbar"><div><img src='images/icon48.png' /></div></li>
+        <li id="about-toolbar"><div><img src='img/icon48.png' /></div></li>
         <li id="none-toolbar"><a href="#none-menu" data-toggle="tab"></a></li>
         <li id="home-toolbar" class="active"><a href="#home-menu" data-toggle="tab">Home</a></li>
         <li id="customize-toolbar"><a href="#div-all-settings" id="customize-tab-href" >Customize</a></li>
         <li id="social-toolbar" style="float:right;">
           <div id="div-social-share" style="margin-top: 6px;">
-            <a href="https://twitter.com/intent/tweet" class="twitter-share-button" data-text="#OneClickSettings fixed my LinkedIn Privacy settings to prevent company espionage. " data-lang="en" data-size="large" data-hashtags="BarracudaLabs" data-url="https://chrome.google.com/webstore/search/One-Click%20LinkedIn%20Privacy%20Settings" data-related="Barracuda,BarracudaLabs,Security">Tweet</a>
+            <a href="https://twitter.com/intent/tweet" class="twitter-share-button" data-text="#OneClickSettings fixed my LinkedIn Privacy settings to prevent company espionage." data-lang="en" data-size="large" data-hashtags="BarracudaLabs" data-url="https://chrome.google.com/webstore/search/One-Click%20LinkedIn%20Privacy%20Settings" data-related="Barracuda,BarracudaLabs">Tweet</a>
           </div>
         </li>
       </ul>
@@ -64,14 +65,14 @@
           </fieldset>
         </div>           
       </div>
-          
-    <div id="debug-form"  style="display:none">
-      <fieldset>
-        <legend> Debugging information </legend>
-      	<p><label for="csrfToken">csrfToken</label><br />
-      	  <input type="text" id="csrfToken" name="csrfToken" size="100" value="" /></p>
-      	<p><input id="save" type="submit" value="Save Bookmark" /></p>
-      </fieldset>
-    </div>
+
+      <div id="debug-form"  style="display:none">
+        <fieldset>
+          <legend> Debugging information </legend>
+          <p><label for="csrfToken">csrfToken</label><br />
+             <input type="text" id="csrfToken" name="csrfToken" size="100" value="" /></p>
+          <p><input id="save" type="submit" value="Save Bookmark" /></p>
+        </fieldset>
+      </div>
   </body>
 </html>

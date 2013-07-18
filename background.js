@@ -25,7 +25,9 @@ function bgReqListener(request, sender, sendResponse) {
 		var arr = request.key;
 		for (var i=0; i<arr.length; i++) { arr[i] = localStorage[arr[i]]; }
 		sendResponse({data: arr});
-		console.log("background call listener : " + request.key + " : : " + localStorage[request.key]);
+		if (isDevelopment) {
+			console.log("background call listener : " + request.key + " : : " + localStorage[request.key]);
+		}
 	} else if (request.method == "setLocalStorage"){
 		localStorage[request.key] = request.value;
 	} else {

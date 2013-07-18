@@ -1,25 +1,25 @@
 {
   "name" : "One-Click LinkedIn Privacy Settings",
-  "version" : "1.2.3.2",
+  "version" : "1.2.3.3",
   "description" : "One click to set your LinkedIn Privacy Settings",
   "background": { "scripts": ["background.js", "settings.js"] },
   "page_action" :
   {
-    "default_icon" : "images/icon16.png",
+    "default_icon" : "img/icon16.png",
     "default_title" : "One click to set your LinkedIn Privacy Settings",
     "default_popup": "popup.html"
   },
-  "content_security_policy": "script-src 'self' https://platform.twitter.com https://connect.facebook.net; object-src 'self'",
+  "content_security_policy": "script-src 'self' https://platform.twitter.com https://connect.facebook.net; frame-src https://platform.twitter.com; object-src 'self'",
   "content_scripts": [
     {
       "matches": ["http://www.linkedin.com/*", "https://www.linkedin.com/*"],
-      "js": ["jquery-ui/js/jquery-1.7.2.min.js", "settings.js", "contentscript.js"]
+      "js": ["js/jquery-1.7.2.min.js", "settings.js", "contentscript.js"]
     }
   ],
   "permissions": [ "tabs", "http://www.linkedin.com/*", "https://www.linkedin.com/*", "webRequest", "webRequestBlocking", "storage" ],
   "icons" : {
-    "48" : "images/icon48.png",
-    "128" : "images/icon128.png"
+    "48" : "img/icon48.png",
+    "128" : "img/icon128.png"
   },
   "manifest_version": 2
 }
