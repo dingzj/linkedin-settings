@@ -101,9 +101,9 @@ var opm = {
 };
 
 /* Messages to be used on LinkedIn Page and Extention popup page */
-var LIHomeFirstCheck = "<div class='alert warning'>We are checking your settings now, please wait...</div>";
+var LIHomeFirstCheck = "<div class='alert warning'>Checking your settings now, please wait...</div>";
 var LIHomeSuccess = "<div class='alert success'><p><strong>Well done.</strong>Your privacy settings are Good. </p></div>";
-var LIHomeUpdating = "<div class='alert warning'>We are fixing your settings now, please wait...</div>";
+var LIHomeUpdating = "<div class='alert warning'>Fixing your settings now, please wait...</div>";
 var LIHomeBad = "<div class='alert warning'><p>You privacy settings may have problems. <a id='fixithref' href='#'> Fix it. </a></p></div>";
 var LIHomeAtRisk = "<div class='alert warning'><p>You changed settings at own risk!</p></div>";
 
@@ -112,7 +112,7 @@ var MsgHomeSuccess = "<div class='alert alert-success'><strong>Well Done!</stron
 var MsgHomeCustom = "<div class='alert'> Your customized privacy settings were updated, and may have problems.</div>";
 var MsgHomeFix = "<div class='alert'> Fix your settings with our recommendation <input type='button' id='btn-set-recommend-settings' name='set-all-setting' value='Fix It'> </div>";
 
-var MsgCustomFirstCheck = "<div class='alert alert-success'>We are fixing your settings now, please wait...</div>";
+var MsgCustomFirstCheck = "<div class='alert alert-success'>Fixing your settings now, please wait...</div>";
 var MsgCustomSuccess = "<div class='alert alert-success'><strong>Cheers!</strong> Your privacy settings were updated with recommended choices!</div>";
 var MsgCustomUpdate = "<div class='alert'> Your customized privacy settings were updated! </div>";
 

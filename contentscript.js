@@ -70,19 +70,24 @@ function responseFunction(response) {
 	};
 };
 
+function userChangedSettingOnWebFunc() {
+	txt = $('#global-error p strong').text();
+	if (txt.indexOf("have successfully") > 1 || txt.indexOf("settings have been changed") > 1) {
+		if (isDevelopment) {
+			console.log(" User changed settings on Web, your own risk : " + $('#global-error p strong'));
+		}
+		$("#injectid").html( LIHomeAtRisk );
+		setLocalStorage('lastRecommendFlag', false);
+		lastSetTime = new Date().toString().replace(/ GMT.*$/, "");
+		setLocalStorage('lastSetTime', lastSetTime);
+		chrome.extension.sendRequest({method: "getLocalStorage", key: keys}, responseFunction);
+	}
+}
+
 function userChangedSettingOnWeb(){
 	$(this).unbind('DOMSubtreeModified');
 	setTimeout(function(){
-		if ($('#global-error p strong').text().indexOf("have successfully") > 1 ) {
-			if (isDevelopment) {
-				console.log(" User changed settings on Web, your own risk : " + $('#global-error p strong'));
-			}
-			$("#injectid").html( LIHomeAtRisk );
-			setLocalStorage('lastRecommendFlag', false);
-			lastSetTime = new Date().toString().replace(/ GMT.*$/, "");
-			setLocalStorage('lastSetTime', lastSetTime);
-			chrome.extension.sendRequest({method: "getLocalStorage", key: keys}, responseFunction);
-		}
+		userChangedSettingOnWebFunc();
 		$('#global-error').bind('DOMSubtreeModified',userChangedSettingOnWeb);
 	}, 1000);
 };
@@ -97,6 +102,7 @@ function contentListener(request, sender, sendResponse) {
 
 //after document-load
 $('#global-error').bind('DOMSubtreeModified', userChangedSettingOnWeb);
+userChangedSettingOnWebFunc();
 //$(".top-nav .wrapper").append("<div id='injectid'>  </div>");
 $("#global-search").css("margin-left", "5px");
 $("#global-search").css("margin-right", "0px");

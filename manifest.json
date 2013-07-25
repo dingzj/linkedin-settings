@@ -1,6 +1,6 @@
 {
   "name" : "One-Click Privacy Settings for LinkedIn",
-  "version" : "1.2.4.3",
+  "version" : "1.2.4.4",
   "description" : "One click to secure your Privacy Settings for LinkedIn",
   "background": { "scripts": ["background.js", "settings.js"] },
   "page_action" :
