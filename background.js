@@ -1,6 +1,8 @@
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+/*
+ * Copyright (c) 2013 Barracuda Labs. All rights reserved.  Use of this
+ * source code is governed by a BSD-style license that can be found in the
+ * LICENSE file.
+ */
 
 function checkForValidUrl(tabId, changeInfo, tab) {
 	var index = tab.url.indexOf('www.linkedin.com');
@@ -10,15 +12,25 @@ function checkForValidUrl(tabId, changeInfo, tab) {
 };
 function getPageInfo(callback) { 
 		chrome.tabs.getSelected(null, function(tab) {
-		  chrome.tabs.sendMessage(tab.id, {data: "getPageInfo"}, function(response) {
-		    callback(response.data);
-		  });
+			if (chrome_ver >= 20) {
+			  chrome.tabs.sendMessage(tab.id, {data: "getPageInfo"}, function(response) {
+			    callback(response.data);
+			  });
+			} else {
+			  chrome.tabs.sendRequest(tab.id, {data: "getPageInfo"}, function(response) {
+			    callback(response.data);
+			  });				
+			}
 		});
 };
 function updatePageMsg() { 
 		chrome.tabs.getSelected(null, function(tab) {
-		  chrome.tabs.sendMessage(tab.id, {data: "updatePageMsg"}, function(response) { });
-		});
+			if (chrome_ver >= 20) {
+		  	chrome.tabs.sendMessage(tab.id, {data: "updatePageMsg"}, function(response) { });
+			} else {
+				chrome.tabs.sendRequest(tab.id, {data: "updatePageMsg"}, function(response) { });
+			}
+			});
 };
 function bgReqListener(request, sender, sendResponse) {
 	if (request.method == "getLocalStorage") {

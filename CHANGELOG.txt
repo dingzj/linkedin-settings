@@ -1,0 +1,4 @@
+1.2.5.0:
+  Fix issues if under Chrome 20
+1.2.4.4:
+  Ready to BH launch

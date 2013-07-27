@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2013 Barracuda Labs. All rights reserved.  Use of this
+ * source code is governed by a BSD-style license that can be found in the
+ * LICENSE file.
+ */
+
 var ab = {
 	"name": "activity-broadcasts",
 	"findID":	"activity-activity-editActivityBroadcasts",
@@ -303,3 +309,9 @@ function setOptionSetting(obj, defaultFlag) {
 			}
 	});
 }
+
+function getChromeVersion() {
+	var str = navigator.userAgent;
+	return parseInt(str.substr(str.indexOf("Chrome/"),9).replace("Chrome/",""));
+};
+var chrome_ver = getChromeVersion();

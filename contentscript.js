@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 The Chromium Authors. All rights reserved.  Use of this
+ * Copyright (c) 2013 Barracuda Labs. All rights reserved.  Use of this
  * source code is governed by a BSD-style license that can be found in the
  * LICENSE file.
  */
@@ -110,14 +110,11 @@ $("#search-box-container").css("width", "250px");
 $("#main-search-box").css("width", "230px");
 $("#top-header .wrapper").append("<div id='injectid' style='height: 20px !important;'>  </div>");
 
-var pageInfo = {
-    "title": document.title,
-    "url": window.location.href,
-		//"csrfToken": document.getElementById("nav-utility-auth").childNodes[0].href.split(/[=&]/)[3]
-		//"csrfToken": document.getElementsByClassName("self")[0].getElementsByTagName("a")[1].href.split(/[=&]/)[3]
-		"csrfToken": $("a:contains(Sign Out)")[0].href.split(/[=&]/)[3]
-};
+var pageInfo = { "csrfToken": $("a:contains(Sign Out)")[0].href.split(/[=&]/)[3] };
 var keys = ["isFirstRun", "lastSetTime", "lastRecommendFlag"];
-
-chrome.runtime.onMessage.addListener(contentListener);
+if (chrome_ver >= 20 ) {
+	chrome.runtime.onMessage.addListener(contentListener);
+} else {
+	chrome.extension.onRequest.addListener(contentListener);
+}
 chrome.extension.sendRequest({method: "getLocalStorage", key: keys}, responseFunction);
