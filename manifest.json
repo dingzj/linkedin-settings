@@ -1,12 +1,12 @@
 {
-  "name" : "One-Click Privacy Settings for LinkedIn",
-  "version" : "1.2.5.0",
-  "description" : "One click to secure your Privacy Settings for LinkedIn",
+  "name" : "Barracuda Profile Protector for LinkedIn",
+  "version" : "1.2.5.2",
+  "description" : "Barracuda Profile Protector for LinkedIn - One click to secure your Privacy Settings for LinkedIn",
   "background": { "scripts": ["background.js", "settings.js"] },
   "page_action" :
   {
     "default_icon" : "img/icon16.png",
-    "default_title" : "One click to secure your Privacy Settings for LinkedIn",
+    "default_title" : "Barracuda Profile Protector for LinkedIn - One click to secure your Privacy Settings for LinkedIn",
     "default_popup": "popup.html"
   },
   "content_security_policy": "script-src 'self' https://platform.twitter.com https://connect.facebook.net; frame-src https://platform.twitter.com; object-src 'self'",

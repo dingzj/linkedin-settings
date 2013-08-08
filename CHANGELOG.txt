@@ -1,3 +1,5 @@
+1.2.5.1:
+  Renamed to "Barracuda Profile Protector for LinkedIn"
 1.2.5.0:
   Fix issues if under Chrome 20
 1.2.4.4:
