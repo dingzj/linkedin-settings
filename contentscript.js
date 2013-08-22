@@ -103,12 +103,13 @@ function contentListener(request, sender, sendResponse) {
 //after document-load
 $('#global-error').bind('DOMSubtreeModified', userChangedSettingOnWeb);
 userChangedSettingOnWebFunc();
-//$(".top-nav .wrapper").append("<div id='injectid'>  </div>");
+
 $("#global-search").css("margin-left", "5px");
 $("#global-search").css("margin-right", "0px");
-$("#search-box-container").css("width", "250px");
-$("#main-search-box").css("width", "230px");
+$("#search-box-container").css("width", "210px");
+$("#main-search-box").css("width", "200px");
 $("#top-header .wrapper").append("<div id='injectid' style='height: 20px !important;'>  </div>");
+$("#top-header .advanced-search-outer").css("width", "25px");
 
 var pageInfo = { "csrfToken": $("a:contains(Sign Out)")[0].href.split(/[=&]/)[3] };
 var keys = ["isFirstRun", "lastSetTime", "lastRecommendFlag"];
