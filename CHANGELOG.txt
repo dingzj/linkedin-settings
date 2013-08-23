@@ -1,3 +1,5 @@
+1.2.5.4:
+  Fix message display bugs on linkedin group page
 1.2.5.1:
   Renamed to "Barracuda Profile Protector for LinkedIn"
 1.2.5.0:

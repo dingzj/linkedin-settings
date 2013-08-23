@@ -100,16 +100,28 @@ function contentListener(request, sender, sendResponse) {
 	}
 }
 
-//after document-load
-$('#global-error').bind('DOMSubtreeModified', userChangedSettingOnWeb);
-userChangedSettingOnWebFunc();
+function changeCSSonPage(pagetype) {
+	$("#global-search").css("margin-left", "5px");
+	$("#global-search").css("margin-right", "0px");
+	$("#search-box-container").css("width", "210px");
+	$("#main-search-box").css("width", "200px");
+	$("#top-header .advanced-search-outer").css("width", "25px");
+	insert_css = (pagetype === "ongroup" ? " class='header-section last-child' " : "");
+	$("#top-header .wrapper").append("<div id='injectid' " + insert_css + " style='height: 20px !important;'>  </div>");
+}
 
-$("#global-search").css("margin-left", "5px");
-$("#global-search").css("margin-right", "0px");
-$("#search-box-container").css("width", "210px");
-$("#main-search-box").css("width", "200px");
-$("#top-header .wrapper").append("<div id='injectid' style='height: 20px !important;'>  </div>");
-$("#top-header .advanced-search-outer").css("width", "25px");
+//after document-load, attach the status on top menu bar
+var idx1 = window.location.href.indexOf('www.linkedin.com');
+var idx2 = window.location.href.indexOf('www.linkedin.com/group');
+if ( idx1 > -1 && idx1 < 13) {
+	if ( idx2 > -1 && idx2 < 13) {
+		changeCSSonPage("ongroup");
+	} else {
+		changeCSSonPage("");
+	};
+	$('#global-error').bind('DOMSubtreeModified', userChangedSettingOnWeb);
+	userChangedSettingOnWebFunc();
+};
 
 var pageInfo = { "csrfToken": $("a:contains(Sign Out)")[0].href.split(/[=&]/)[3] };
 var keys = ["isFirstRun", "lastSetTime", "lastRecommendFlag"];
