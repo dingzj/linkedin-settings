@@ -108,13 +108,13 @@ var opm = {
 
 /* Messages to be used on LinkedIn Page and Extention popup page */
 var LIHomeFirstCheck = "<div class='alert warning'>Checking your settings now, please wait...</div>";
-var LIHomeSuccess = "<div class='alert success'><p><strong>Well done.</strong>Your privacy settings are Good. </p></div>";
+var LIHomeSuccess = "<div class='alert success'><p><strong>Great.</strong>Your privacy settings are Good. </p></div>";
 var LIHomeUpdating = "<div class='alert warning'>Fixing your settings now, please wait...</div>";
-var LIHomeBad = "<div class='alert warning'><p>You privacy settings may have problems. <a id='fixithref' href='#'> Fix it. </a></p></div>";
+var LIHomeBad = "<div class='alert warning'><p>You settings may have problems. <a id='fixithref' href='#'> Fix it. </a></p></div>";
 var LIHomeAtRisk = "<div class='alert warning'><p>You changed settings at own risk!</p></div>";
 
 var MsgHomeFirstCheck = "<div class='alert alert-success'>Checking your Linkedin Settings now...</div>";
-var MsgHomeSuccess = "<div class='alert alert-success'><strong>Well Done!</strong> Your privacy settings are secure.</div>";
+var MsgHomeSuccess = "<div class='alert alert-success'><strong>Great.</strong> Your privacy settings are secure.</div>";
 var MsgHomeCustom = "<div class='alert'> Your customized privacy settings were updated, and may have problems.</div>";
 var MsgHomeFix = "<div class='alert'> Fix your settings with our recommendation <input type='button' id='btn-set-recommend-settings' name='set-all-setting' value='Fix It'> </div>";
 
@@ -278,7 +278,7 @@ function setRadioSetting(obj, defaultFlag) {
 
 	return request.success(function (response, textStatus, jqXHR){
 			var xmlDoc = $(response);
-			var msgElem  = xmlDoc.find("#global-error").find("strong")[0];
+			var msgElem  = xmlDoc.find("#global-alert-queue").find("strong")[0];
 			obj.curValue = obj.newValue;
 			if (isDevelopment) {
 				console.log("This ajax responsed - " + obj.name + "msgelem " + msgElem + ", cur= " + obj.curValue);
@@ -302,7 +302,7 @@ function setOptionSetting(obj, defaultFlag) {
 
 	return request.success(function (response, textStatus, jqXHR){
 			var xmlDoc = $(response);
-			var msgElem  = xmlDoc.find("#global-error").find("strong")[0];
+			var msgElem  = xmlDoc.find("#global-alert-queue").find("strong")[0];
 			obj.curValue = obj.newValue;
 			if (isDevelopment) {
 				console.log("This ajax responsed - " + obj.name + "msgelem " + msgElem + ", cur= " + obj.curValue);

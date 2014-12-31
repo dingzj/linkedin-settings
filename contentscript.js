@@ -71,10 +71,10 @@ function responseFunction(response) {
 };
 
 function userChangedSettingOnWebFunc() {
-	txt = $('#global-error p strong').text();
+	txt = $('#global-alert-queue p strong').text();
 	if (txt.indexOf("have successfully") > 1 || txt.indexOf("settings have been changed") > 1) {
 		if (isDevelopment) {
-			console.log(" User changed settings on Web, your own risk : " + $('#global-error p strong'));
+			console.log(" User changed settings on Web, your own risk : " + $('#global-alert-queue p strong'));
 		}
 		$("#injectid").html( LIHomeAtRisk );
 		setLocalStorage('lastRecommendFlag', false);
@@ -88,7 +88,7 @@ function userChangedSettingOnWeb(){
 	$(this).unbind('DOMSubtreeModified');
 	setTimeout(function(){
 		userChangedSettingOnWebFunc();
-		$('#global-error').bind('DOMSubtreeModified',userChangedSettingOnWeb);
+		$('#global-alert-queue').bind('DOMSubtreeModified',userChangedSettingOnWeb);
 	}, 1000);
 };
 
@@ -119,7 +119,7 @@ if ( idx1 > -1 && idx1 < 13) {
 	} else {
 		changeCSSonPage("");
 	};
-	$('#global-error').bind('DOMSubtreeModified', userChangedSettingOnWeb);
+	$('#global-alert-queue').bind('DOMSubtreeModified', userChangedSettingOnWeb);
 	userChangedSettingOnWebFunc();
 };
 
